@@ -16,7 +16,7 @@ $minFatalDecimal = $minFatal / 100.0;                // dikonversi ke desimal un
 // ── Koneksi Neo4j via Bolt ──────────────────────────────────────────────
 try {
     $client = ClientBuilder::create()
-        ->withDriver('bolt', 'bolt://neo4j:neo4jneo4j@localhost:7687')
+        ->withDriver('bolt', 'bolt://neo4j:15022006@localhost:7687')
         ->build();
 } catch (\Throwable $e) {
     http_response_code(500);

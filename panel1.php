@@ -1371,7 +1371,6 @@
     async function loadCrashDetail(cid) {
       document.querySelectorAll('.ci').forEach(e => e.classList.remove('active'));
       document.querySelector(`[data-cid="${cid}"]`)?.classList.add('active');
-      document.getElementById('crashDetail').innerHTML = '<div class="lt">fetching from mongodb...</div>';
       const res = await fetch(`api/get_crash_detail.php?id=${cid}`);
       const doc = await res.json();
       if (!doc || doc.error) { document.getElementById('crashDetail').innerHTML = '<div class="cd-empty">not found in crash_events</div>'; return }
