@@ -123,6 +123,8 @@ for _, row in crash_df.iterrows():
         "people_killed":       safe_int(row.get("NUMBER OF PERSONS KILLED")),
         "people_injured":      safe_int(row.get("NUMBER OF PERSONS INJURED")),
         "pedestrians_killed":  safe_int(row.get("NUMBER OF PEDESTRIANS KILLED")),
+        "pedestrians_injured": safe_int(row.get("NUMBER OF PEDESTRIANS INJURED")),
+        "cyclists_injured":    safe_int(row.get("NUMBER OF CYCLIST INJURED")),
         "cyclists_killed":     safe_int(row.get("NUMBER OF CYCLIST KILLED")),
 
         # ← KEY CHANGE: always present, empty array if no data
