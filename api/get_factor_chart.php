@@ -8,7 +8,7 @@ $day        = $_GET['day']        ?? null;
 $year_start = (int)($_GET['year_start'] ?? 2020);
 $year_end   = (int)($_GET['year_end']   ?? 2025);
 
-$conn = pg_connect("host=localhost port=5433 dbname=nyc_collisions user=postgres password=admin");
+$conn = pg_connect("host=localhost port=5434 dbname=collision user=postgres password=password");
 if (!$conn) { echo json_encode(['error' => 'DB connection failed']); exit; }
 
 $params  = [$year_start, $year_end, $borough];

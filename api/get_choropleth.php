@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
-$conn = pg_connect("host=localhost port=5433 dbname=nyc_collisions user=postgres password=admin");
+$conn = pg_connect("host=localhost port=5434 dbname=collision user=postgres password=password");
 if (!$conn) { echo json_encode(['error' => 'DB connection failed']); exit; }
 
 $sql = "

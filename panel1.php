@@ -27,7 +27,7 @@ html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:1.5}
 
 header{height:46px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
-header h1{font-size:13px;font-weight:500;letter-spacing:0.1px}
+header h1{font-size:1em;font-weight:500;letter-spacing:0.1px}
 header .sep{color:var(--dim);font-size:16px;font-weight:200}
 header .sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:400}
 header .tag{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--red);background:var(--red-bg);border:1px solid rgba(230,57,70,0.18);padding:2px 7px;border-radius:2px;letter-spacing:1px}
@@ -49,8 +49,8 @@ main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:
 
 .card{background:var(--surface);border:1px solid var(--border);border-radius:5px;display:flex;flex-direction:column;overflow:hidden}
 .ch{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.ch h2{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
-.ch .cm{font-family:var(--mono);font-size:9px;color:var(--dim)}
+.ch h2{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;color:var(--text)}
+.ch .cm{font-family:var(--mono);font-size:9px;color:var(--muted)}
 .cb{flex:1;position:relative;min-height:0;overflow:hidden}
 
 .top-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:520px;flex-shrink:0}
@@ -79,30 +79,39 @@ main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:
 .bd-i{background:var(--blue-bg);color:#6fb3d4;border:1px solid rgba(69,123,157,0.25)}
 
 #crashDetail{overflow-y:auto;height:100%;padding:10px 12px;font-size:12px;color:var(--muted)}
-.cd-empty{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);font-family:var(--mono)}
+.cd-empty{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-family:var(--mono)}
 .cds{margin-bottom:10px}
 .cds-t{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 .cdg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.cdkv .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.3px}
+.cdkv .k{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.3px}
 .cdkv .v{font-size:11px;color:var(--text);font-family:var(--mono)}
 .cdkv .v.r{color:var(--red)}
 .vb{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:6px 8px;margin-bottom:5px}
 .vb-t{font-size:9px;color:var(--blue);font-family:var(--mono);margin-bottom:4px;font-weight:500}
 .pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
 .pr:last-child{border-bottom:none}
-.lt{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);font-family:var(--mono)}
+.lt{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);font-family:var(--mono)}
 
 .leaflet-tooltip{background:var(--surface2)!important;border:1px solid var(--border2)!important;color:var(--text)!important;font-family:'Inter',sans-serif!important;font-size:11px!important;border-radius:3px!important;box-shadow:0 4px 16px rgba(0,0,0,0.6)!important}
 .leaflet-tooltip::before{display:none!important}
 .leaflet-tooltip b{color:var(--amber)}
+
+.heat-legend{padding:8px 13px;display:flex;align-items:center;gap:10px;border-top:1px solid var(--border);flex-shrink:0;font-size:11px}
+.heat-legend .h-swatch{width:34px;height:12px;border-radius:3px;border:1px solid rgba(255,255,255,0.04)}
+.heat-legend .h-item{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.bar-legend{padding:10px 0 10px 16px;display:flex;flex-direction:column;gap:10px;font-size:11px;color:var(--muted);min-width:170px;max-width:220px}
+.bar-legend .b-item{display:flex;align-items:center;gap:8px}
+.bar-legend .b-swatch{width:16px;height:16px;display:inline-block;flex-shrink:0}
+.bar-chart-row{display:flex;gap:14px;height:100%;min-height:0;align-items:stretch}
+.bar-chart-area{flex:1;min-width:0;display:flex;align-items:stretch}
+.bar-chart-area canvas{width:100%;height:100%}
+#heatmapCanvas{border-radius:4px;display:block}
 </style>
 </head>
 <body>
 <header>
   <h1>NYC Crash Intelligence</h1>
   <span class="sep">/</span>
-  <span class="sub">Temporal &amp; Spatial Fatality Pattern</span>
-  <span class="tag">PANEL 01</span>
 </header>
 <div class="layout">
 <aside>
@@ -138,33 +147,43 @@ main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:
   <div class="top-row">
     <div class="card">
       <div class="ch"><h2>Crash Heatmap — Hour × Day</h2><span class="cm">24 × 7</span></div>
+      <div class="si" id="slotInfo">Click a time slot to focus on</div>
       <div class="cb"><canvas id="heatmapCanvas"></canvas></div>
-      <div class="si" id="slotInfo">click a cell to drill down</div>
+      <div class="heat-legend" id="heatLegend">
+        <div class="h-item"><div class="h-label">Number of Fatalities</div></div>
+        <div class="h-item"><div class="h-swatch" style="background:rgba(15,15,22,0.9)"></div><div class="h-label">None</div></div>
+        <div class="h-item"><div class="h-swatch" style="background:#1d3557"></div><div class="h-label">Low</div></div>
+        <div class="h-item"><div class="h-swatch" style="background:#457b9d"></div><div class="h-label">Med</div></div>
+        <div class="h-item"><div class="h-swatch" style="background:#f4a261"></div><div class="h-label">High</div></div>
+        <div class="h-item"><div class="h-swatch" style="background:#e63946"></div><div class="h-label">Critical</div></div>
+      </div>
     </div>
     <div class="card">
-      <div class="ch"><h2>Fatality Rate per Borough</h2><span class="cm">killed / 1,000</span></div>
+      <div class="ch"><h2>Fatality Rate per Borough</h2><span class="cm">Killed / 1,000</span></div>
+      <div class="si mapHint">Click a borough to filter crashes</div>
       <div class="cb"><div id="map"></div></div>
-      <div class="mleg">
-        <div class="mleg-i"><div class="mleg-d" style="background:#1d3557"></div><span class="mleg-l">Low</span></div>
-        <div class="mleg-i"><div class="mleg-d" style="background:#457b9d"></div><span class="mleg-l">Med</span></div>
-        <div class="mleg-i"><div class="mleg-d" style="background:#f4a261"></div><span class="mleg-l">High</span></div>
-        <div class="mleg-i"><div class="mleg-d" style="background:#e63946"></div><span class="mleg-l">Critical</span></div>
-        <span style="margin-left:auto;font-size:9px;color:var(--dim)">click to filter</span>
-      </div>
     </div>
   </div>
   <div class="card bar-card">
-    <div class="ch"><h2 id="barTitle">Top Contributing Factors</h2><span class="cm" id="barMeta">all boroughs</span></div>
-    <div class="cb"><canvas id="barCanvas"></canvas></div>
+    <div class="ch"><h2 id="barTitle">Top Contributing Factors</h2><span class="cm" id="barMeta">All boroughs</span></div>
+    <div class="cb bar-chart-row">
+      <div class="bar-chart-area"><canvas id="barCanvas"></canvas></div>
+      <div class="bar-legend">
+        <div class="b-item"><div class="h-label">FATALITY RATE</div></div>
+        <div class="b-item"><span class="b-swatch" style="background:#e63946"></span><span>≥ 1.5%</span></div>
+        <div class="b-item"><span class="b-swatch" style="background:#f4a261"></span><span>0.5% – 1.49%</span></div>
+        <div class="b-item"><span class="b-swatch" style="background:#457b9d"></span><span>< 0.5%</span></div>
+      </div>
+    </div>
   </div>
   <div class="bot-row">
     <div class="card">
-      <div class="ch"><h2 id="listTitle">Crash List</h2><span class="cm">top 50 by severity</span></div>
-      <div class="cb"><div id="crashList"><div class="lt">select a heatmap cell</div></div></div>
+      <div class="ch"><h2 id="listTitle">Crash List</h2><span class="cm">Top 50 by severity</span></div>
+      <div class="cb"><div id="crashList"><div class="lt">loading crash list...</div></div></div>
     </div>
     <div class="card">
-      <div class="ch"><h2>Crash Detail</h2><span class="cm" id="detailMeta">crash_events · mongodb</span></div>
-      <div class="cb"><div id="crashDetail"><div class="cd-empty">select a crash from the list</div></div></div>
+      <div class="ch"><h2>Crash Detail</h2></div>
+      <div class="cb"><div id="crashDetail"><div class="cd-empty">Select a crash from the list</div></div></div>
     </div>
   </div>
 </main>
@@ -176,7 +195,7 @@ function getFilters(){return new URLSearchParams({borough:state.borough,year_sta
 
 // ── COLORS ──
 function heatColor(val,max){
-  if(!max||val===0) return 'rgba(15,15,22,0.8)';
+  if(!max||val===0) return 'rgba(36,42,57,0.92)';
   const t=Math.pow(Math.min(val/max,1),0.4);
   // black → dark blue → blue → amber → red
   if(t<0.25){const s=t/0.25;return `rgba(${Math.round(s*29)},${Math.round(s*53)},${Math.round(22+s*65)},0.9)`}
@@ -226,7 +245,7 @@ async function loadHeatmap(){
     data:{datasets:[{
       data:md,
       backgroundColor(c){const v=c.dataset.data[c.dataIndex];return heatColor(v.v,maxV)},
-      borderColor:'rgba(9,9,14,0.8)',borderWidth:1,
+      borderColor:'rgba(255,255,255,0.12)',borderWidth:1,
       width:({chart})=>(chart.chartArea?.width||420)/7-1.2,
       height:({chart})=>(chart.chartArea?.height||560)/24-0.8,
     }]},
@@ -309,6 +328,19 @@ async function loadBarChart(){
   if(state.activeDay!==null)p.set('day',state.activeDay);
   const res=await fetch('api/get_factor_chart.php?'+p);
   const data=await res.json();
+
+  // If a heatmap slot is selected but there are no factors, show message
+  const cbEl=document.querySelector('.bar-card .cb');
+  if(state.activeHour!==null && (!data || data.length===0)){
+    document.getElementById('barMeta').textContent=`${state.activeDay.toLowerCase()} · ${String(state.activeHour).padStart(2,'0')}:00`;
+    if(barChart){barChart.destroy(); barChart=null}
+    cbEl.innerHTML='<div class="lt">No Factors Were Identified</div>';
+    return;
+  }
+
+  // Ensure canvas exists (in case it was replaced by a message previously)
+  if(!cbEl.querySelector('canvas')) cbEl.innerHTML='<canvas id="barCanvas"></canvas>';
+
   const labels=data.map(r=>r.factor_name);
   const counts=data.map(r=>+r.crash_count);
   const fPcts=data.map(r=>+r.fatal_pct);
@@ -343,10 +375,14 @@ async function loadBarChart(){
 
 // ── CRASH LIST ──
 async function loadCrashList(){
-  if(state.activeHour===null)return;
-  const p=getFilters();p.set('hour',state.activeHour);p.set('day',state.activeDay);
+  const p=getFilters();
+  if(state.activeHour!==null)p.set('hour',state.activeHour);
+  if(state.activeDay!==null)p.set('day',state.activeDay);
   document.getElementById('crashList').innerHTML='<div class="lt">loading...</div>';
-  document.getElementById('listTitle').textContent=`${state.activeDay}  ${String(state.activeHour).padStart(2,'0')}:00`;
+  document.getElementById('listTitle').textContent=
+    state.activeHour!==null
+      ? `${state.activeDay}  ${String(state.activeHour).padStart(2,'0')}:00`
+      : 'Top Crashes by Severity';
   const res=await fetch('api/get_crash_list.php?'+p);
   const data=await res.json();
   if(!data.length){document.getElementById('crashList').innerHTML='<div class="lt">no crashes found</div>';return}
@@ -394,10 +430,9 @@ async function loadCrashDetail(cid){
 // ── REFRESH ──
 function refreshAll(){
   state.activeHour=null;state.activeDay=null;
-  document.getElementById('slotInfo').textContent='click a cell to drill down';
-  document.getElementById('crashList').innerHTML='<div class="lt">select a heatmap cell</div>';
-  document.getElementById('crashDetail').innerHTML='<div class="cd-empty">select a crash from the list</div>';
-  loadHeatmap();loadBarChart();
+  document.getElementById('slotInfo').textContent='Click a cell to drill down';
+  document.getElementById('crashDetail').innerHTML='<div class="cd-empty">Select a crash from the list</div>';
+  loadHeatmap();loadBarChart();loadCrashList();
 }
 
 document.getElementById('filterBorough').addEventListener('change',e=>{state.borough=e.target.value;refreshAll()});
@@ -405,7 +440,7 @@ document.getElementById('filterYearStart').addEventListener('change',e=>{state.y
 document.getElementById('filterYearEnd').addEventListener('change',e=>{state.yearEnd=+e.target.value;refreshAll()});
 document.getElementById('colorMode').addEventListener('change',e=>{state.colorMode=e.target.value;loadHeatmap()});
 
-(async()=>{await initMap();await loadHeatmap();await loadBarChart()})();
+(async()=>{await initMap();await loadHeatmap();await loadBarChart();await loadCrashList()})();
 </script>
 </body>
 </html>

@@ -2,8 +2,8 @@ import pandas as pd
 from pymongo import MongoClient, InsertOne
 from pymongo.errors import BulkWriteError
 
-client = MongoClient("mongodb://nath:150206@localhost:27017")
-db = client["nyc_collisions"]
+client = MongoClient("mongodb://mongodb:mongodb@localhost:27017/")
+db = client["pdds/collision"]
 
 print("Loading CSVs...")
 crash_df   = pd.read_csv("data/crash_final.csv",   low_memory=False)

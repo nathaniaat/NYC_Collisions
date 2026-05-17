@@ -4,9 +4,9 @@ from psycopg2.extras import execute_values
 
 # ── Connection ──
 conn = psycopg2.connect(
-    host="localhost", port=5433,
-    database="nyc_collisions",
-    user="postgres", password="admin"
+    host="localhost", port=5434,
+    database="collision",
+    user="postgres", password="password"
 )
 cur = conn.cursor()
 
