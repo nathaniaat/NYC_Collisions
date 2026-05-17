@@ -1,6 +1,5 @@
 <?php
 // panel1.php — Panel 1: Temporal & Spatial Fatality Pattern
-// NYC Crash Intelligence Dashboard
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,780 +7,405 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NYC Crash Intelligence — Panel 1</title>
-
-<!-- Leaflet.js for choropleth map -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Chart.js for heatmap + bar chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<!-- chartjs-chart-matrix plugin for heatmap -->
 <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.min.js"></script>
-
 <style>
-  :root {
-    --bg:        #0d1117;
-    --surface:   #161b22;
-    --border:    #30363d;
-    --text:      #e6edf3;
-    --muted:     #8b949e;
-    --accent:    #f78166;
-    --accent2:   #79c0ff;
-    --fatal-low: #1f4e79;
-    --fatal-high:#c0392b;
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#09090e;--surface:#111116;--surface2:#17171e;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#ededf2;--muted:#55556a;--dim:#2a2a38;
+  --red:#e63946;--red-bg:rgba(230,57,70,0.12);
+  --amber:#f4a261;--blue:#457b9d;--blue-bg:rgba(69,123,157,0.15);
+  --mono:'JetBrains Mono',monospace;
+}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:13px;line-height:1.5}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+header{height:46px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0}
+header h1{font-size:13px;font-weight:500;letter-spacing:0.1px}
+header .sep{color:var(--dim);font-size:16px;font-weight:200}
+header .sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;font-weight:400}
+header .tag{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--red);background:var(--red-bg);border:1px solid rgba(230,57,70,0.18);padding:2px 7px;border-radius:2px;letter-spacing:1px}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
+.layout{display:flex;height:calc(100vh - 46px)}
 
-  /* ── Header ── */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  header h1 { font-size: 18px; font-weight: 600; letter-spacing: 0.3px; }
-  header span { color: var(--accent); font-size: 12px; font-weight: 500;
-    background: rgba(247,129,102,0.12); padding: 3px 8px; border-radius: 4px; }
+aside{width:196px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);padding:14px 12px;display:flex;flex-direction:column;gap:14px;overflow-y:auto}
+.fg label{display:block;font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px}
+aside select{width:100%;background:var(--bg);border:1px solid var(--border2);color:var(--text);padding:5px 8px;border-radius:3px;font-family:'Inter',sans-serif;font-size:12px;appearance:none;cursor:pointer;outline:none}
+aside select:focus{border-color:var(--blue)}
+.fr{display:flex;gap:5px}
+.fr select{flex:1}
+.stats{border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.stat .v{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--text);letter-spacing:-0.5px}
+.stat .v.r{color:var(--red)}
+.stat .l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:1px}
 
-  /* ── Layout ── */
-  .layout { display: flex; height: calc(100vh - 53px); }
+main{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
 
-  /* ── Sidebar ── */
-  aside {
-    width: 220px;
-    flex-shrink: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 20px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-  }
-  aside h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--muted); margin-bottom: 8px; }
-  aside select, aside input[type=range] {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 10px;
-    border-radius: 6px;
-    font-size: 13px;
-  }
-  aside select:focus { outline: 1px solid var(--accent2); }
-  .range-row { display: flex; justify-content: space-between; font-size: 12px;
-    color: var(--muted); margin-top: 4px; }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:5px;display:flex;flex-direction:column;overflow:hidden}
+.ch{padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ch h2{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted)}
+.ch .cm{font-family:var(--mono);font-size:9px;color:var(--dim)}
+.cb{flex:1;position:relative;min-height:0;overflow:hidden}
 
-  .stat-pill {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 12px;
-  }
-  .stat-pill .val { font-size: 22px; font-weight: 700; color: var(--accent); }
-  .stat-pill .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.top-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:520px;flex-shrink:0}
+.bar-card{height:195px;flex-shrink:0}
+.bot-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;height:230px;flex-shrink:0}
 
-  /* ── Main content ── */
-  main {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+#map{width:100%;height:100%}
+.leaflet-container{background:var(--bg)!important}
 
-  /* ── Top row: heatmap + choropleth ── */
-  .top-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    height: 520px;
-  }
+.si{padding:6px 13px;font-size:10px;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0;font-family:var(--mono)}
+.si span{color:var(--amber)}
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-  }
-  .card h2 {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .card-body { flex: 1; position: relative; min-height: 0; }
+.mleg{padding:5px 13px;display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);flex-shrink:0}
+.mleg-i{display:flex;align-items:center;gap:3px}
+.mleg-d{width:7px;height:7px;border-radius:50%}
+.mleg-l{font-size:9px;color:var(--muted)}
 
-  #map { width: 100%; height: 100%; border-radius: 6px; }
+#crashList{overflow-y:auto;height:100%;padding:6px;display:flex;flex-direction:column;gap:3px}
+.ci{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:6px 9px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:border-color 0.1s}
+.ci:hover{border-color:var(--border2)}
+.ci.active{border-color:var(--red)}
+.ci-b{font-size:12px;color:var(--text)}
+.ci-s{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.bd{font-size:9px;font-family:var(--mono);padding:2px 5px;border-radius:2px;font-weight:500}
+.bd-f{background:var(--red-bg);color:var(--red);border:1px solid rgba(230,57,70,0.25)}
+.bd-i{background:var(--blue-bg);color:#6fb3d4;border:1px solid rgba(69,123,157,0.25)}
 
-  /* ── Bar chart row ── */
-  .bar-card { height: 240px; }
+#crashDetail{overflow-y:auto;height:100%;padding:10px 12px;font-size:12px;color:var(--muted)}
+.cd-empty{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);font-family:var(--mono)}
+.cds{margin-bottom:10px}
+.cds-t{font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.cdg{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cdkv .k{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:0.3px}
+.cdkv .v{font-size:11px;color:var(--text);font-family:var(--mono)}
+.cdkv .v.r{color:var(--red)}
+.vb{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:6px 8px;margin-bottom:5px}
+.vb-t{font-size:9px;color:var(--blue);font-family:var(--mono);margin-bottom:4px;font-weight:500}
+.pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
+.pr:last-child{border-bottom:none}
+.lt{height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--dim);font-family:var(--mono)}
 
-  /* ── Crash list + detail row ── */
-  .bottom-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .crash-list-card { height: 260px; }
-  .crash-detail-card { height: 260px; }
-
-  /* crash list items */
-  #crashList {
-    overflow-y: auto;
-    height: 190px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .crash-item {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: border-color 0.15s;
-  }
-  .crash-item:hover { border-color: var(--accent2); }
-  .crash-item.active { border-color: var(--accent); }
-  .crash-item .cid { font-size: 12px; color: var(--muted); }
-  .crash-item .meta { font-size: 13px; }
-  .badge-fatal { background: rgba(192,57,43,0.2); color: #e74c3c;
-    border-radius: 4px; padding: 2px 6px; font-size: 11px; font-weight: 600; }
-  .badge-inj   { background: rgba(247,129,102,0.15); color: var(--accent);
-    border-radius: 4px; padding: 2px 6px; font-size: 11px; }
-
-  /* crash detail */
-  #crashDetail {
-    overflow-y: auto;
-    height: 190px;
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .detail-section { margin-bottom: 10px; }
-  .detail-section h4 { color: var(--accent2); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4px 12px;
-  }
-  .detail-kv { display: flex; flex-direction: column; }
-  .detail-kv .k { font-size: 10px; color: var(--muted); }
-  .detail-kv .v { font-size: 12px; color: var(--text); }
-
-  /* slot info bar */
-  #slotInfo {
-    font-size: 12px;
-    color: var(--muted);
-    padding: 6px 0;
-    min-height: 24px;
-  }
-  #slotInfo span { color: var(--accent2); font-weight: 600; }
-
-  /* loading overlay */
-  .loading { color: var(--muted); font-size: 12px; text-align: center;
-    padding: 20px; }
-
-  /* legend */
-  .legend {
-    display: flex; gap: 12px; align-items: center;
-    font-size: 11px; color: var(--muted); margin-top: 6px;
-  }
-  .legend-swatch {
-    width: 12px; height: 12px; border-radius: 2px; display: inline-block;
-  }
+.leaflet-tooltip{background:var(--surface2)!important;border:1px solid var(--border2)!important;color:var(--text)!important;font-family:'Inter',sans-serif!important;font-size:11px!important;border-radius:3px!important;box-shadow:0 4px 16px rgba(0,0,0,0.6)!important}
+.leaflet-tooltip::before{display:none!important}
+.leaflet-tooltip b{color:var(--amber)}
 </style>
 </head>
 <body>
-
 <header>
   <h1>NYC Crash Intelligence</h1>
-  <span>Panel 1 — Temporal &amp; Spatial Fatality Pattern</span>
+  <span class="sep">/</span>
+  <span class="sub">Temporal &amp; Spatial Fatality Pattern</span>
+  <span class="tag">PANEL 01</span>
 </header>
-
 <div class="layout">
-
-  <!-- ── Sidebar ── -->
-  <aside>
-    <div>
-      <h3>Borough</h3>
-      <select id="filterBorough">
-        <option value="ALL">All Boroughs</option>
-        <option value="BROOKLYN">Brooklyn</option>
-        <option value="QUEENS">Queens</option>
-        <option value="MANHATTAN">Manhattan</option>
-        <option value="BRONX">Bronx</option>
-        <option value="STATEN ISLAND">Staten Island</option>
-      </select>
+<aside>
+  <div class="fg"><label>Borough</label>
+    <select id="filterBorough">
+      <option value="ALL">All Boroughs</option>
+      <option value="BROOKLYN">Brooklyn</option>
+      <option value="QUEENS">Queens</option>
+      <option value="MANHATTAN">Manhattan</option>
+      <option value="BRONX">Bronx</option>
+      <option value="STATEN ISLAND">Staten Island</option>
+    </select>
+  </div>
+  <div class="fg"><label>Year Range</label>
+    <div class="fr">
+      <select id="filterYearStart"><?php for($y=2020;$y<=2025;$y++) echo "<option value='$y'".($y==2020?" selected":"").">$y</option>";?></select>
+      <select id="filterYearEnd"><?php for($y=2020;$y<=2025;$y++) echo "<option value='$y'".($y==2025?" selected":"").">$y</option>";?></select>
     </div>
-
-    <div>
-      <h3>Year Range</h3>
-      <label style="font-size:12px;color:var(--muted)">From</label>
-      <select id="filterYearStart">
-        <?php for($y=2020;$y<=2025;$y++) echo "<option value='$y'" . ($y==2020?" selected":"") . ">$y</option>"; ?>
-      </select>
-      <label style="font-size:12px;color:var(--muted);margin-top:6px;display:block">To</label>
-      <select id="filterYearEnd">
-        <?php for($y=2020;$y<=2025;$y++) echo "<option value='$y'" . ($y==2025?" selected":"") . ">$y</option>"; ?>
-      </select>
+  </div>
+  <div class="fg"><label>Heatmap Mode</label>
+    <select id="colorMode">
+      <option value="killed">By Fatalities</option>
+      <option value="crash">By Total Crashes</option>
+    </select>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="v" id="statTotalCrash">—</div><div class="l">Total Crashes</div></div>
+    <div class="stat"><div class="v r" id="statTotalKilled">—</div><div class="l">Total Killed</div></div>
+    <div class="stat"><div class="v" id="statPeakSlot">—</div><div class="l">Peak Fatal Slot</div></div>
+  </div>
+</aside>
+<main>
+  <div class="top-row">
+    <div class="card">
+      <div class="ch"><h2>Crash Heatmap — Hour × Day</h2><span class="cm">24 × 7</span></div>
+      <div class="cb"><canvas id="heatmapCanvas"></canvas></div>
+      <div class="si" id="slotInfo">click a cell to drill down</div>
     </div>
-
-    <div>
-      <h3>Color Mode</h3>
-      <select id="colorMode">
-        <option value="killed">By Fatalities</option>
-        <option value="crash">By Total Crash</option>
-      </select>
-    </div>
-
-    <div class="stat-pill">
-      <div class="val" id="statTotalCrash">—</div>
-      <div class="lbl">Total Crashes</div>
-    </div>
-    <div class="stat-pill">
-      <div class="val" id="statTotalKilled">—</div>
-      <div class="lbl">Total Killed</div>
-    </div>
-    <div class="stat-pill">
-      <div class="val" id="statPeakSlot">—</div>
-      <div class="lbl">Peak Fatal Slot</div>
-    </div>
-  </aside>
-
-  <!-- ── Main ── -->
-  <main>
-
-    <!-- Row 1: heatmap + choropleth -->
-    <div class="top-row">
-
-      <div class="card">
-        <h2>Crash Heatmap — Hour × Day</h2>
-        <div class="card-body">
-          <canvas id="heatmapCanvas"></canvas>
-        </div>
-        <div id="slotInfo">Click a cell to explore crashes at that time slot</div>
-      </div>
-
-      <div class="card">
-        <h2>Fatality Rate per Borough</h2>
-        <div class="card-body">
-          <div id="map"></div>
-        </div>
-        <div class="legend">
-          <span class="legend-swatch" style="background:var(--fatal-low)"></span> Low
-          <span class="legend-swatch" style="background:#e67e22"></span> Mid
-          <span class="legend-swatch" style="background:var(--fatal-high)"></span> High
-          <span style="margin-left:auto;font-size:10px">per 1,000 crashes</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Row 2: bar chart -->
-    <div class="card bar-card">
-      <h2 id="barTitle">Top Contributing Factors — All Boroughs</h2>
-      <div class="card-body">
-        <canvas id="barCanvas"></canvas>
+    <div class="card">
+      <div class="ch"><h2>Fatality Rate per Borough</h2><span class="cm">killed / 1,000</span></div>
+      <div class="cb"><div id="map"></div></div>
+      <div class="mleg">
+        <div class="mleg-i"><div class="mleg-d" style="background:#1d3557"></div><span class="mleg-l">Low</span></div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#457b9d"></div><span class="mleg-l">Med</span></div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#f4a261"></div><span class="mleg-l">High</span></div>
+        <div class="mleg-i"><div class="mleg-d" style="background:#e63946"></div><span class="mleg-l">Critical</span></div>
+        <span style="margin-left:auto;font-size:9px;color:var(--dim)">click to filter</span>
       </div>
     </div>
-
-    <!-- Row 3: crash list + detail -->
-    <div class="bottom-row">
-
-      <div class="card crash-list-card">
-        <h2 id="listTitle">Crash List — Click a heatmap cell</h2>
-        <div id="crashList">
-          <div class="loading">Select a heatmap cell to see crash list</div>
-        </div>
-      </div>
-
-      <div class="card crash-detail-card">
-        <h2>Crash Detail</h2>
-        <div id="crashDetail">
-          <div>Click a crash from the list to see full detail</div>
-        </div>
-      </div>
-
+  </div>
+  <div class="card bar-card">
+    <div class="ch"><h2 id="barTitle">Top Contributing Factors</h2><span class="cm" id="barMeta">all boroughs</span></div>
+    <div class="cb"><canvas id="barCanvas"></canvas></div>
+  </div>
+  <div class="bot-row">
+    <div class="card">
+      <div class="ch"><h2 id="listTitle">Crash List</h2><span class="cm">top 50 by severity</span></div>
+      <div class="cb"><div id="crashList"><div class="lt">select a heatmap cell</div></div></div>
     </div>
-
-  </main>
+    <div class="card">
+      <div class="ch"><h2>Crash Detail</h2><span class="cm" id="detailMeta">crash_events · mongodb</span></div>
+      <div class="cb"><div id="crashDetail"><div class="cd-empty">select a crash from the list</div></div></div>
+    </div>
+  </div>
+</main>
 </div>
-
 <script>
-// ════════════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════════════
-const state = {
-  borough:   'ALL',
-  yearStart: 2020,
-  yearEnd:   2025,
-  colorMode: 'killed',
-  activeHour: null,
-  activeDay:  null,
-  activeCid:  null,
-};
+const state={borough:'ALL',yearStart:2020,yearEnd:2025,colorMode:'killed',activeHour:null,activeDay:null};
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+function getFilters(){return new URLSearchParams({borough:state.borough,year_start:state.yearStart,year_end:state.yearEnd})}
 
-// ════════════════════════════════════════════════
-// HELPERS
-// ════════════════════════════════════════════════
-const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+// ── COLORS ──
+function heatColor(val,max){
+  if(!max||val===0) return 'rgba(15,15,22,0.8)';
+  const t=Math.pow(Math.min(val/max,1),0.4);
+  // black → dark blue → blue → amber → red
+  if(t<0.25){const s=t/0.25;return `rgba(${Math.round(s*29)},${Math.round(s*53)},${Math.round(22+s*65)},0.9)`}
+  if(t<0.5){const s=(t-0.25)/0.25;return `rgba(${Math.round(29+s*40)},${Math.round(53+s*70)},${Math.round(87-s*10)},0.9)`}
+  if(t<0.75){const s=(t-0.5)/0.25;return `rgba(${Math.round(69+s*175)},${Math.round(123+s*36)},${Math.round(77-s*74)},0.9)`}
+  const s=(t-0.75)/0.25;
+  return `rgba(${Math.round(244-s*14)},${Math.round(159-s*102)},${Math.round(3+s*24)},0.9)`;
+}
+function choroplethColor(r){
+  if(r>=2.5)return '#e63946';
+  if(r>=1.8)return '#f4a261';
+  if(r>=1.2)return '#e9c46a';
+  if(r>=0.8)return '#457b9d';
+  if(r>=0.4)return '#2d6a8f';
+  return '#1d3557';
+}
 
-function getFilters() {
-  return new URLSearchParams({
-    borough:    state.borough,
-    year_start: state.yearStart,
-    year_end:   state.yearEnd,
+// ── HEATMAP ──
+let heatmapChart=null;
+async function loadHeatmap(){
+  const res=await fetch('api/get_heatmap.php?'+getFilters());
+  const data=await res.json();
+  const matrix={};
+  let maxK=0,maxC=0,totC=0,totK=0,peakV=0,peakL='—';
+  data.forEach(r=>{
+    matrix[`${r.col_hour}_${r.day_of_week}`]=r;
+    const k=+r.total_killed,c=+r.total_crash;
+    if(k>maxK)maxK=k; if(c>maxC)maxC=c;
+    totC+=c; totK+=k;
+    if(k>peakV){peakV=k;peakL=`${(r.day_of_week||'').slice(0,3)} ${r.col_hour}:00`}
   });
-}
+  document.getElementById('statTotalCrash').textContent=totC.toLocaleString();
+  document.getElementById('statTotalKilled').textContent=totK.toLocaleString();
+  document.getElementById('statPeakSlot').textContent=peakL;
 
-function fatalColor(rate) {
-  // rate = fatality_rate_per_1000
-  if (rate >= 10) return '#c0392b';
-  if (rate >= 7)  return '#e74c3c';
-  if (rate >= 4)  return '#e67e22';
-  if (rate >= 2)  return '#2980b9';
-  return '#1f4e79';
-}
-
-function heatColor(val, max) {
-  const t = Math.min(val / (max || 1), 1);
-  const r = Math.round(31  + t * (192 - 31));
-  const g = Math.round(78  + t * (57  - 78));
-  const b = Math.round(121 + t * (43  - 121));
-  return `rgba(${r},${g},${b},0.85)`;
-}
-
-// ════════════════════════════════════════════════
-// HEATMAP (Chart.js matrix)
-// ════════════════════════════════════════════════
-let heatmapChart = null;
-
-async function loadHeatmap() {
-  const p = getFilters();
-  const res = await fetch('api/get_heatmap.php?' + p);
-  const data = await res.json();
-
-  // Build 24×7 matrix
-  const matrix = {};
-  let maxKilled = 0, maxCrash = 0;
-  let totalCrash = 0, totalKilled = 0;
-  let peakVal = 0, peakLabel = '—';
-
-  data.forEach(row => {
-    const key = `${row.col_hour}_${row.day_of_week}`;
-    matrix[key] = row;
-    maxKilled = Math.max(maxKilled, +row.total_killed);
-    maxCrash  = Math.max(maxCrash,  +row.total_crash);
-    totalCrash  += +row.total_crash;
-    totalKilled += +row.total_killed;
-    if (+row.total_killed > peakVal) {
-      peakVal   = +row.total_killed;
-      peakLabel = `${row.day_of_week.slice(0,3)} ${row.col_hour}:00`;
-    }
-  });
-
-  // Update sidebar stats
-  document.getElementById('statTotalCrash').textContent  = totalCrash.toLocaleString();
-  document.getElementById('statTotalKilled').textContent = totalKilled.toLocaleString();
-  document.getElementById('statPeakSlot').textContent    = peakLabel;
-
-  // Build dataset for chartjs-chart-matrix
-  const datasets = [];
-  const matrixData = [];
-  const useKilled  = state.colorMode === 'killed';
-  const maxVal     = useKilled ? maxKilled : maxCrash;
-
-  for (let h = 0; h < 24; h++) {
-    for (let d = 0; d < 7; d++) {
-      const row = matrix[`${h}_${DAYS[d]}`] || { total_killed: 0, total_crash: 0 };
-      const val = useKilled ? +row.total_killed : +row.total_crash;
-      matrixData.push({
-        x: d,
-        y: h,
-        v: val,
-        killed: +row.total_killed,
-        crash:  +row.total_crash,
-      });
-    }
+  const useK=state.colorMode==='killed';
+  const maxV=useK?maxK:maxC;
+  const md=[];
+  for(let h=0;h<24;h++) for(let d=0;d<7;d++){
+    const r=matrix[`${h}_${DAYS[d]}`]||{total_killed:0,total_crash:0};
+    md.push({x:d,y:h,v:useK?+r.total_killed:+r.total_crash,killed:+r.total_killed,crash:+r.total_crash});
   }
-
-  const ctx = document.getElementById('heatmapCanvas').getContext('2d');
-  if (heatmapChart) heatmapChart.destroy();
-
-  heatmapChart = new Chart(ctx, {
-    type: 'matrix',
-    data: {
-      datasets: [{
-        label: 'Crashes',
-        data: matrixData,
-        backgroundColor(ctx) {
-          const v = ctx.dataset.data[ctx.dataIndex];
-          return heatColor(v.v, maxVal);
-        },
-        borderColor: '#0d1117',
-        borderWidth: 1,
-        width:  ({ chart }) => (chart.chartArea?.width  || 400) / 7  - 1,
-        height: ({ chart }) => (chart.chartArea?.height || 600) / 24 - 1,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title(items) {
-              const d = items[0].raw;
-              return `${DAYS[d.x]}, ${d.y}:00`;
-            },
-            label(item) {
-              const d = item.raw;
-              return [`${d.crash.toLocaleString()} crashes`, `${d.killed} killed`];
-            }
+  const ctx=document.getElementById('heatmapCanvas').getContext('2d');
+  if(heatmapChart)heatmapChart.destroy();
+  heatmapChart=new Chart(ctx,{
+    type:'matrix',
+    data:{datasets:[{
+      data:md,
+      backgroundColor(c){const v=c.dataset.data[c.dataIndex];return heatColor(v.v,maxV)},
+      borderColor:'rgba(9,9,14,0.8)',borderWidth:1,
+      width:({chart})=>(chart.chartArea?.width||420)/7-1.2,
+      height:({chart})=>(chart.chartArea?.height||560)/24-0.8,
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:{duration:250},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#17171e',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,
+          titleColor:'#f4a261',bodyColor:'#55556a',
+          titleFont:{family:'JetBrains Mono',size:11},bodyFont:{family:'JetBrains Mono',size:10},
+          callbacks:{
+            title:i=>`${DAYS[i[0].raw.x]}  ${String(i[0].raw.y).padStart(2,'0')}:00`,
+            label:i=>[`crashes : ${i.raw.crash.toLocaleString()}`,`killed  : ${i.raw.killed}`]
           }
         }
       },
-      scales: {
-        x: {
-          type: 'linear', min: -0.5, max: 6.5,
-          position: 'top',
-          ticks: {
-            stepSize: 1,
-            callback: v => DAYS[v] ?? '',
-            color: '#e6edf3', font: { size: 11, weight: '600' }
-          },
-          grid: { color: '#21262d' }
-        },
-        y: {
-          type: 'linear', min: -0.5, max: 23.5,
-          reverse: true,
-          ticks: {
-            stepSize: 1,
-            callback: v => Number.isInteger(v) ? `${String(v).padStart(2,'0')}:00` : '',
-            color: '#8b949e', font: { size: 10 }
-          },
-          grid: { color: '#21262d' }
-        }
+      scales:{
+        x:{type:'linear',min:-0.5,max:6.5,position:'top',
+          grid:{color:'rgba(255,255,255,0.03)',drawBorder:false},
+          ticks:{stepSize:1,callback:v=>['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][v]??'',
+            color:'#55556a',font:{family:'Inter',size:10,weight:'500'}}},
+        y:{type:'linear',min:-0.5,max:23.5,reverse:true,
+          grid:{color:'rgba(255,255,255,0.03)',drawBorder:false},
+          ticks:{stepSize:1,callback:v=>Number.isInteger(v)?String(v).padStart(2,'0')+':00':'',
+            color:'#3a3a50',font:{family:'JetBrains Mono',size:9}}}
       },
-      onClick(event, elements) {
-        if (!elements.length) return;
-        const d = elements[0].element.$context.raw;
-        state.activeHour = d.y;
-        state.activeDay  = DAYS[d.x];
-        document.getElementById('slotInfo').innerHTML =
-          `Showing crashes on <span>${state.activeDay}</span> at <span>${state.activeHour}:00</span>`;
-        loadCrashList();
-        loadBarChart();
+      onClick(event,elements){
+        if(!elements.length)return;
+        const d=elements[0].element.$context.raw;
+        state.activeHour=d.y; state.activeDay=DAYS[d.x];
+        document.getElementById('slotInfo').innerHTML=
+          `<span>${state.activeDay}</span> · <span>${String(state.activeHour).padStart(2,'0')}:00</span> — ${d.crash.toLocaleString()} crashes · ${d.killed} killed`;
+        loadCrashList(); loadBarChart();
       }
     }
   });
 }
 
-// ════════════════════════════════════════════════
-// CHOROPLETH (Leaflet.js)
-// ════════════════════════════════════════════════
-let map = null;
-let geojsonLayer = null;
-let boroughData  = {};
+// ── CHOROPLETH ──
+let map=null,geojsonLayer=null,boroughData={};
+async function initMap(){
+  map=L.map('map',{zoomControl:false,attributionControl:false}).setView([40.65,-73.97],10);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd'}).addTo(map);
 
-async function initMap() {
-  map = L.map('map', { zoomControl: true, attributionControl: false })
-           .setView([40.70, -73.94], 10);
+  const res=await fetch('api/get_choropleth.php');
+  const data=await res.json();
+  data.forEach(r=>{boroughData[r.borough]=r});
 
-  // Dark tile layer
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    subdomains: 'abcd'
-  }).addTo(map);
+  const gjRes=await fetch('data/nyc_boroughs.geojson');
+  const gjData=await gjRes.json();
+  const sp=gjData.features[0]?.properties||{};
+  const nk=sp.boro_name!==undefined?'boro_name':sp.name!==undefined?'name':sp.borough!==undefined?'borough':Object.keys(sp)[0];
 
-  // Load borough fatality data from PostgreSQL
-  const res  = await fetch('api/get_choropleth.php');
-  const data = await res.json();
-  data.forEach(r => { boroughData[r.borough] = r; });
-
-  // Load NYC GeoJSON
-  const gjRes  = await fetch('data/nyc_boroughs.geojson');
-  const gjData = await gjRes.json();
-
-  geojsonLayer = L.geoJSON(gjData, {
-    style(feature) {
-      const name = feature.properties.boro_name?.toUpperCase()
-                    .replace('THE BRONX','BRONX');
-      const d    = boroughData[name] || {};
-      return {
-        fillColor:   fatalColor(+d.fatality_rate_per_1000 || 0),
-        fillOpacity: 0.75,
-        weight: 2,
-        color: '#ffffff',
-      };
+  geojsonLayer=L.geoJSON(gjData,{
+    style(f){
+      const nm=((f.properties[nk]||'').toUpperCase().replace('THE BRONX','BRONX').trim());
+      const d=boroughData[nm]||{};
+      return{fillColor:choroplethColor(+d.fatality_rate_per_1000||0),fillOpacity:0.6,weight:1,color:'rgba(255,255,255,0.12)'};
     },
-    onEachFeature(feature, layer) {
-      const name = feature.properties.boro_name?.toUpperCase()
-                    .replace('THE BRONX','BRONX');
-      const d    = boroughData[name] || {};
-      layer.bindTooltip(
-        `<b>${feature.properties.boro_name}</b><br>
-         ${(+d.total_crash||0).toLocaleString()} crashes<br>
-         ${d.fatality_rate_per_1000 || 0} killed/1,000`,
-        { sticky: true }
-      );
-      layer.on('click', () => {
-        state.borough = name;
-        document.getElementById('filterBorough').value = name;
-        refreshAll();
-      });
-      layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.95, weight: 3 }));
-      layer.on('mouseout',  () => geojsonLayer.resetStyle(layer));
+    onEachFeature(f,layer){
+      const raw=f.properties[nk]||'';
+      const nm=(raw.toUpperCase().replace('THE BRONX','BRONX').trim());
+      const d=boroughData[nm]||{};
+      const rate=(+d.fatality_rate_per_1000||0).toFixed(2);
+      layer.bindTooltip(`<b>${raw}</b><br>${(+d.total_crash||0).toLocaleString()} crashes<br>${rate} killed/1,000`,{sticky:true,offset:[10,0]});
+      layer.on('click',()=>{state.borough=nm;document.getElementById('filterBorough').value=nm;refreshAll()});
+      layer.on('mouseover',()=>layer.setStyle({fillOpacity:0.9,weight:2,color:'rgba(255,255,255,0.5)'}));
+      layer.on('mouseout',()=>geojsonLayer.resetStyle(layer));
     }
   }).addTo(map);
+  map.fitBounds(geojsonLayer.getBounds(),{padding:[8,8]});
 }
 
-// ════════════════════════════════════════════════
-// BAR CHART (contributing factors)
-// ════════════════════════════════════════════════
-let barChart = null;
-
-async function loadBarChart() {
-  const p = getFilters();
-  if (state.activeHour !== null) p.set('hour', state.activeHour);
-  if (state.activeDay  !== null) p.set('day',  state.activeDay);
-
-  const res  = await fetch('api/get_factor_chart.php?' + p);
-  const data = await res.json();
-
-  const labels     = data.map(r => r.factor_name);
-  const counts     = data.map(r => +r.crash_count);
-  const fatalPcts  = data.map(r => +r.fatal_pct);
-  const colors     = fatalPcts.map(p => {
-    if (p >= 8) return '#c0392b';
-    if (p >= 5) return '#e74c3c';
-    if (p >= 3) return '#378add';
-    return '#85b7eb';
-  });
-
-  // Update title
-  const ctx = document.getElementById('barTitle');
-  ctx.textContent = state.activeDay
-    ? `Top Factors — ${state.activeDay} ${state.activeHour}:00`
-    : `Top Contributing Factors — ${state.borough === 'ALL' ? 'All Boroughs' : state.borough}`;
-
-  const canvasCtx = document.getElementById('barCanvas').getContext('2d');
-  if (barChart) barChart.destroy();
-
-  barChart = new Chart(canvasCtx, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{
-        data: counts,
-        backgroundColor: colors,
-        borderRadius: 4,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label(item) {
-              const i = item.dataIndex;
-              return [`${counts[i].toLocaleString()} crashes`, `${fatalPcts[i].toFixed(1)}% fatal`];
-            }
-          }
+// ── BAR CHART ──
+let barChart=null;
+async function loadBarChart(){
+  const p=getFilters();
+  if(state.activeHour!==null)p.set('hour',state.activeHour);
+  if(state.activeDay!==null)p.set('day',state.activeDay);
+  const res=await fetch('api/get_factor_chart.php?'+p);
+  const data=await res.json();
+  const labels=data.map(r=>r.factor_name);
+  const counts=data.map(r=>+r.crash_count);
+  const fPcts=data.map(r=>+r.fatal_pct);
+  const colors=fPcts.map(p=>p>=1.5?'#e63946':p>=0.5?'#f4a261':'#457b9d');
+  document.getElementById('barMeta').textContent=
+    state.activeDay?`${state.activeDay.toLowerCase()} · ${String(state.activeHour).padStart(2,'0')}:00`
+    :`${state.borough==='ALL'?'all boroughs':state.borough.toLowerCase()} · ${state.yearStart}–${state.yearEnd}`;
+  const cx=document.getElementById('barCanvas').getContext('2d');
+  if(barChart)barChart.destroy();
+  barChart=new Chart(cx,{
+    type:'bar',
+    data:{labels,datasets:[{data:counts,backgroundColor:colors,borderRadius:2,borderSkipped:false}]},
+    options:{
+      indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:200},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#17171e',borderColor:'rgba(255,255,255,0.08)',borderWidth:1,
+          titleColor:'#ededf2',bodyColor:'#55556a',
+          titleFont:{family:'JetBrains Mono',size:10},bodyFont:{family:'JetBrains Mono',size:10},
+          callbacks:{label:i=>`${counts[i.dataIndex].toLocaleString()} crashes  ·  ${fPcts[i.dataIndex].toFixed(2)}% fatal`}
         }
       },
-      scales: {
-        x: { grid: { color: '#21262d' }, ticks: { color: '#8b949e' } },
-        y: { grid: { display: false },   ticks: { color: '#e6edf3', font: { size: 11 } } }
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.04)',drawBorder:false},ticks:{color:'#3a3a50',font:{family:'JetBrains Mono',size:9}}},
+        y:{grid:{display:false},ticks:{color:'#909090',font:{family:'Inter',size:11}}}
       },
-      onClick(event, elements) {
-        if (!elements.length) return;
-        const factor = labels[elements[0].index];
-        // Cross-panel: store for Panel 2 highlight
-        sessionStorage.setItem('highlightFactor', factor);
-        // Visual feedback
-        document.getElementById('barTitle').textContent += ` → "${factor}" selected`;
-      }
+      onClick(event,elements){if(elements.length)sessionStorage.setItem('highlightFactor',labels[elements[0].index])}
     }
   });
 }
 
-// ════════════════════════════════════════════════
-// CRASH LIST (from PostgreSQL)
-// ════════════════════════════════════════════════
-async function loadCrashList() {
-  if (state.activeHour === null) return;
-
-  const p = getFilters();
-  p.set('hour', state.activeHour);
-  p.set('day',  state.activeDay);
-
-  document.getElementById('crashList').innerHTML = '<div class="loading">Loading...</div>';
-  document.getElementById('listTitle').textContent =
-    `Crashes — ${state.activeDay} ${state.activeHour}:00`;
-
-  const res  = await fetch('api/get_crash_list.php?' + p);
-  const data = await res.json();
-
-  if (!data.length) {
-    document.getElementById('crashList').innerHTML = '<div class="loading">No crashes found</div>';
-    return;
-  }
-
-  document.getElementById('crashList').innerHTML = data.map(r => `
-    <div class="crash-item" onclick="loadCrashDetail(${r.collision_id})" data-cid="${r.collision_id}">
-      <div>
-        <div class="meta">#${r.collision_id} · ${r.borough}</div>
-        <div class="cid">${r.col_time} · ${r.people_injured} injured</div>
-      </div>
-      <div>
-        ${+r.people_killed > 0
-          ? `<span class="badge-fatal">${r.people_killed} killed</span>`
-          : `<span class="badge-inj">${r.people_injured} injured</span>`}
-      </div>
-    </div>
-  `).join('');
+// ── CRASH LIST ──
+async function loadCrashList(){
+  if(state.activeHour===null)return;
+  const p=getFilters();p.set('hour',state.activeHour);p.set('day',state.activeDay);
+  document.getElementById('crashList').innerHTML='<div class="lt">loading...</div>';
+  document.getElementById('listTitle').textContent=`${state.activeDay}  ${String(state.activeHour).padStart(2,'0')}:00`;
+  const res=await fetch('api/get_crash_list.php?'+p);
+  const data=await res.json();
+  if(!data.length){document.getElementById('crashList').innerHTML='<div class="lt">no crashes found</div>';return}
+  document.getElementById('crashList').innerHTML=data.map(r=>`
+    <div class="ci" onclick="loadCrashDetail(${r.collision_id})" data-cid="${r.collision_id}">
+      <div><div class="ci-b">${r.borough}</div><div class="ci-s">#${r.collision_id} · ${r.col_time}</div></div>
+      ${+r.people_killed>0
+        ?`<span class="bd bd-f">${r.people_killed} killed</span>`
+        :`<span class="bd bd-i">${r.people_injured} inj</span>`}
+    </div>`).join('');
 }
 
-// ════════════════════════════════════════════════
-// CRASH DETAIL (from MongoDB)
-// ════════════════════════════════════════════════
-async function loadCrashDetail(cid) {
-  // Highlight active item
-  document.querySelectorAll('.crash-item').forEach(el => el.classList.remove('active'));
+// ── CRASH DETAIL ──
+async function loadCrashDetail(cid){
+  document.querySelectorAll('.ci').forEach(e=>e.classList.remove('active'));
   document.querySelector(`[data-cid="${cid}"]`)?.classList.add('active');
-
-  document.getElementById('crashDetail').innerHTML = '<div class="loading">Loading from MongoDB...</div>';
-
-  const res = await fetch(`api/get_crash_detail.php?id=${cid}`);
-  const doc = await res.json();
-
-  if (!doc || doc.error) {
-    document.getElementById('crashDetail').innerHTML = '<div class="loading">Detail not found</div>';
-    return;
-  }
-
-  const vCount = doc.vehicles?.length || 0;
-  const pCount = doc.persons?.length  || 0;
-
-  const vehicleHtml = (doc.vehicles || []).map((v, i) => `
-    <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:6px;">
-      <div style="color:var(--accent2);font-size:10px;font-weight:600;margin-bottom:4px">
-        Vehicle ${i+1}: ${v.vehicle_type} ${v.vehicle_make}
-      </div>
-      <div class="detail-grid">
-        <div class="detail-kv"><span class="k">Pre-collision</span><span class="v">${v.pre_collision}</span></div>
-        <div class="detail-kv"><span class="k">Point of impact</span><span class="v">${v.point_of_impact}</span></div>
-        <div class="detail-kv"><span class="k">License status</span><span class="v">${v.driver_license_status}</span></div>
-        <div class="detail-kv"><span class="k">Year</span><span class="v">${v.vehicle_year}</span></div>
-      </div>
-    </div>
-  `).join('');
-
-  const personHtml = (doc.persons || []).map((p, i) => `
-    <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
-      <span>${p.person_type} · ${p.age_group} · ${p.person_sex}</span>
-      <span style="color:${p.person_injury==='Injured'?'var(--accent)':'var(--muted)'}">${p.person_injury}</span>
-    </div>
-  `).join('');
-
-  document.getElementById('crashDetail').innerHTML = `
-    <div style="width:100%">
-      <div class="detail-section">
-        <h4>Crash #${doc.collision_id}</h4>
-        <div class="detail-grid">
-          <div class="detail-kv"><span class="k">Borough</span><span class="v">${doc.borough}</span></div>
-          <div class="detail-kv"><span class="k">Hour</span><span class="v">${doc.crash_hour}:00</span></div>
-          <div class="detail-kv"><span class="k">Killed</span><span class="v" style="color:var(--accent)">${doc.people_killed}</span></div>
-          <div class="detail-kv"><span class="k">Injured</span><span class="v">${doc.people_injured}</span></div>
-          <div class="detail-kv" style="grid-column:1/-1"><span class="k">Factor</span><span class="v">${doc.contributing_factor}</span></div>
-        </div>
-      </div>
-      <div class="detail-section">
-        <h4>${vCount} Vehicle(s)</h4>
-        ${vehicleHtml}
-      </div>
-      ${pCount > 0 ? `
-      <div class="detail-section">
-        <h4>${pCount} Person(s)</h4>
-        ${personHtml}
-      </div>` : ''}
-    </div>
-  `;
+  document.getElementById('crashDetail').innerHTML='<div class="lt">fetching from mongodb...</div>';
+  const res=await fetch(`api/get_crash_detail.php?id=${cid}`);
+  const doc=await res.json();
+  if(!doc||doc.error){document.getElementById('crashDetail').innerHTML='<div class="cd-empty">not found in crash_events</div>';return}
+  const vH=(doc.vehicles||[]).map((v,i)=>`
+    <div class="vb"><div class="vb-t">V${i+1} · ${v.vehicle_type||'—'} · ${v.vehicle_make||'—'}</div>
+    <div class="cdg">
+      <div class="cdkv"><div class="k">Pre-collision</div><div class="v">${v.pre_collision||'—'}</div></div>
+      <div class="cdkv"><div class="k">Impact</div><div class="v">${v.point_of_impact||'—'}</div></div>
+      <div class="cdkv"><div class="k">License</div><div class="v">${v.driver_license_status||'—'}</div></div>
+      <div class="cdkv"><div class="k">Year</div><div class="v">${v.vehicle_year||'—'}</div></div>
+    </div></div>`).join('');
+  const pH=(doc.persons||[]).map(p=>`
+    <div class="pr"><span>${p.person_type} · ${p.age_group} · ${p.person_sex}</span>
+    <span style="color:${p.person_injury==='Injured'?'var(--red)':'var(--muted)'}">${p.person_injury}</span></div>`).join('');
+  document.getElementById('crashDetail').innerHTML=`
+    <div class="cds"><div class="cds-t">Crash #${doc.collision_id}</div>
+    <div class="cdg">
+      <div class="cdkv"><div class="k">Borough</div><div class="v">${doc.borough}</div></div>
+      <div class="cdkv"><div class="k">Hour</div><div class="v">${String(doc.crash_hour).padStart(2,'0')}:00</div></div>
+      <div class="cdkv"><div class="k">Killed</div><div class="v r">${doc.people_killed}</div></div>
+      <div class="cdkv"><div class="k">Injured</div><div class="v">${doc.people_injured}</div></div>
+      <div class="cdkv" style="grid-column:1/-1"><div class="k">Factor</div><div class="v" style="font-size:11px;white-space:normal">${doc.contributing_factor}</div></div>
+    </div></div>
+    ${vH?`<div class="cds"><div class="cds-t">${(doc.vehicles||[]).length} vehicle(s)</div>${vH}</div>`:''}
+    ${pH?`<div class="cds"><div class="cds-t">${(doc.persons||[]).length} person(s)</div>${pH}</div>`:''}`;
 }
 
-// ════════════════════════════════════════════════
-// REFRESH ALL
-// ════════════════════════════════════════════════
-function refreshAll() {
-  state.activeHour = null;
-  state.activeDay  = null;
-  document.getElementById('slotInfo').textContent = 'Click a cell to explore crashes at that time slot';
-  document.getElementById('crashList').innerHTML  = '<div class="loading">Select a heatmap cell to see crash list</div>';
-  document.getElementById('crashDetail').innerHTML = '<div>Click a crash from the list to see full detail</div>';
-  loadHeatmap();
-  loadBarChart();
+// ── REFRESH ──
+function refreshAll(){
+  state.activeHour=null;state.activeDay=null;
+  document.getElementById('slotInfo').textContent='click a cell to drill down';
+  document.getElementById('crashList').innerHTML='<div class="lt">select a heatmap cell</div>';
+  document.getElementById('crashDetail').innerHTML='<div class="cd-empty">select a crash from the list</div>';
+  loadHeatmap();loadBarChart();
 }
 
-// ════════════════════════════════════════════════
-// FILTER LISTENERS
-// ════════════════════════════════════════════════
-document.getElementById('filterBorough').addEventListener('change', e => {
-  state.borough = e.target.value;
-  refreshAll();
-});
-document.getElementById('filterYearStart').addEventListener('change', e => {
-  state.yearStart = +e.target.value;
-  refreshAll();
-});
-document.getElementById('filterYearEnd').addEventListener('change', e => {
-  state.yearEnd = +e.target.value;
-  refreshAll();
-});
-document.getElementById('colorMode').addEventListener('change', e => {
-  state.colorMode = e.target.value;
-  loadHeatmap();
-});
+document.getElementById('filterBorough').addEventListener('change',e=>{state.borough=e.target.value;refreshAll()});
+document.getElementById('filterYearStart').addEventListener('change',e=>{state.yearStart=+e.target.value;refreshAll()});
+document.getElementById('filterYearEnd').addEventListener('change',e=>{state.yearEnd=+e.target.value;refreshAll()});
+document.getElementById('colorMode').addEventListener('change',e=>{state.colorMode=e.target.value;loadHeatmap()});
 
-// ════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════
-(async () => {
-  await initMap();
-  await loadHeatmap();
-  await loadBarChart();
-})();
+(async()=>{await initMap();await loadHeatmap();await loadBarChart()})();
 </script>
 </body>
 </html>
