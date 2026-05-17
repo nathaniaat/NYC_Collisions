@@ -3,7 +3,7 @@ from neo4j import GraphDatabase
 
 driver = GraphDatabase.driver(
     "bolt://localhost:7687",
-    auth=("neo4j", "15022006")
+    auth=("neo4j", "neo4jneo4j")
 )
 
 print("Loading crash data...")
