@@ -1000,7 +1000,7 @@
     .p3-donut-wrap { flex: 1; padding: 6px 12px 10px; position: relative; }
     .p3-donut-wrap canvas { width: 100% !important; height: 100% !important; }
     .p3-divider { width: 1px; background: var(--border); margin: 12px 0; }
-    .p3-profile-body { display: grid; grid-template-columns: 1fr 1px 1fr 1px 180px; height: 240px; }
+    .p3-profile-body { display: grid; grid-template-columns: 1fr 1px 1fr; height: 240px; }
     .p3-profile-third { display: flex; flex-direction: column; overflow: hidden; }
     .p3-profile-third canvas { width: 100% !important; height: 100% !important; }
     .p3-profile-third .p3-donut-wrap { flex: 1; }
@@ -1015,7 +1015,7 @@
   </header>
   <div class="layout">
     <aside>
-      <div class="fg"><label>Borough</label>
+      <div class="fg"><label for="filterBorough">Borough</label>
         <select id="filterBorough">
           <option value="ALL">All Boroughs</option>
           <option value="BROOKLYN">Brooklyn</option>
@@ -1025,7 +1025,7 @@
           <option value="STATEN ISLAND">Staten Island</option>
         </select>
       </div>
-      <div class="fg"><label>Year Range</label>
+      <div class="fg"><label for="filterYearStart">Year Range</label>
         <div class="fr">
           <select id="filterYearStart"><?php for ($y = 2020; $y <= 2025; $y++)
             echo "<option value='$y'" . ($y == 2020 ? " selected" : "") . ">$y</option>"; ?></select>
@@ -1033,7 +1033,7 @@
             echo "<option value='$y'" . ($y == 2025 ? " selected" : "") . ">$y</option>"; ?></select>
         </div>
       </div>
-      <div class="fg"><label>Heatmap Mode</label>
+      <div class="fg"><label for="colorMode">Heatmap Mode</label>
         <select id="colorMode">
           <option value="killed">By Fatalities</option>
           <option value="crash">By Total Crashes</option>
@@ -1071,7 +1071,7 @@
         <div class="top-row">
           <div class="card">
             <div class="ch">
-              <h2>Crash Heatmap — Hour × Day</h2><span class="cm">24 × 7</span>
+              <h2>Crash Heatmap — Hour × Day</h2>
             </div>
             <div class="si" id="slotInfo">Click a time slot to focus on</div>
             <div class="cb"><canvas id="heatmapCanvas"></canvas></div>
@@ -1103,7 +1103,7 @@
           </div>
           <div class="card">
             <div class="ch">
-              <h2>Fatality Rate per Borough</h2><span class="cm">Killed / 1,000</span>
+              <h2>Fatality Rate per Borough</h2>
             </div>
             <div class="si mapHint">Click a borough to filter crashes</div>
             <div class="cb">
@@ -1163,12 +1163,12 @@
           </div>
           <div class="panel2-controls">
             <div class="p2-ctrl">
-              <label>Min Co-occurrence</label>
+              <label for="p2SliderCount">Min Co-occurrence</label>
               <input type="range" id="p2SliderCount" min="1" max="100" value="5" step="1">
               <span class="ctrl-val" id="p2ValCount">5</span>
             </div>
             <div class="p2-ctrl">
-              <label>Min Fatal Rate (%)</label>
+              <label for="p2SliderFatal">Min Fatal Rate (%)</label>
               <input type="range" id="p2SliderFatal" min="0" max="20" value="0" step="0.5">
               <span class="ctrl-val" id="p2ValFatal">0%</span>
             </div>
@@ -1240,10 +1240,10 @@
           <div class="p3-card">
             <div class="p3-card-head">
               <div>
-                <h3 class="p3-ch-title">Heatmap Borough × Hour</h3>
+                <h3 class="p3-ch-title">VRU Borough x Hour</h3>
               </div>
               <div class="p3-ctrl">
-                <label>Mode</label>
+                <label for="p3BtnKilled">Mode</label>
                 <div class="p3-toggle">
                   <button class="p3-btn active" id="p3BtnKilled" type="button" onclick="p3SetMode('killed')">Killed</button>
                   <button class="p3-btn" id="p3BtnInjured" type="button" onclick="p3SetMode('injured')">Injured</button>
@@ -1261,7 +1261,7 @@
           </div>
           <div class="p3-card">
             <div class="ch">
-              <h3 class="p3-ch-title">Risk Ratio Bubble Chart</h3>
+              <h2>Risk Ratio Bubble Chart</h2>
             </div>
             <div class="p3-chart-body"><canvas id="p3BubbleCanvas"></canvas></div>
             <div class="p3-legend-row">
@@ -1273,7 +1273,7 @@
         <div class="panel3-row2">
           <div class="p3-card">
             <div class="ch">
-              <h3 class="p3-ch-title">Driver Behavior</h3>
+              <h2>Driver Behavior</h2>
             </div>
             <div class="p3-driver-body">
               <div class="p3-driver-half">
@@ -1289,7 +1289,7 @@
           </div>
           <div class="p3-card">
             <div class="ch">
-              <h3 class="p3-ch-title">VRU Victim Profile</h3>
+              <h2>VRU Victim Profile</h2>
             </div>
             <div class="p3-profile-body">
               <div class="p3-profile-third">
@@ -1300,11 +1300,6 @@
               <div class="p3-profile-third">
                 <div class="p3-sub-title">Bodily Injury</div>
                 <canvas id="p3InjuryCanvas"></canvas>
-              </div>
-              <div class="p3-divider"></div>
-              <div class="p3-profile-third">
-                <div class="p3-sub-title">Safety Equipment</div>
-                <div class="p3-donut-wrap"><canvas id="p3SafetyCanvas"></canvas></div>
               </div>
             </div>
           </div>
@@ -1321,13 +1316,13 @@
     // ── COLORS ──
     function heatColor(val, max) {
       if (!max || val === 0) return 'rgba(36,42,57,0.92)';
-      const t = Math.pow(Math.min(val / max, 1), 0.4);
-      // black → dark blue → blue → amber → red
-      if (t < 0.25) { const s = t / 0.25; return `rgba(${Math.round(s * 29)},${Math.round(s * 53)},${Math.round(22 + s * 65)},0.9)` }
-      if (t < 0.5) { const s = (t - 0.25) / 0.25; return `rgba(${Math.round(29 + s * 40)},${Math.round(53 + s * 70)},${Math.round(87 - s * 10)},0.9)` }
-      if (t < 0.75) { const s = (t - 0.5) / 0.25; return `rgba(${Math.round(69 + s * 175)},${Math.round(123 + s * 36)},${Math.round(77 - s * 74)},0.9)` }
-      const s = (t - 0.75) / 0.25;
-      return `rgba(${Math.round(244 - s * 14)},${Math.round(159 - s * 102)},${Math.round(3 + s * 24)},0.9)`;
+      const ratio = Math.min(Math.max(val / max, 0), 1);
+      const t = Math.pow(ratio, 0.4); // perceptual scaling
+      // Map into the same four legend stops: Low | Med | High | Critical
+      if (t < 0.25) return 'rgba(29,53,87,0.9)'; // Low
+      if (t < 0.5) return '#457b9d'; // Med
+      if (t < 0.75) return '#f4a261'; // High
+      return '#e63946'; // Critical
     }
     function choroplethColor(r) {
       if (r >= 2.5) return '#e63946';
@@ -2007,17 +2002,15 @@
       preColChart: null,
       ageChart: null,
       injuryChart: null,
-      safetyChart: null,
     };
 
-    // ── Color scale ──────────────────────────────────────────────────────────
     function p3HeatColor(val, max) {
-      if (!max || val === 0) return 'rgba(15,15,22,0.7)';
-      const t = Math.pow(Math.min(val / max, 1), 0.4);
-      if (t < 0.33) { const s = t / 0.33; return `rgba(${Math.round(s*69)},${Math.round(s*123)},${Math.round(22+s*65)},0.85)`; }
-      if (t < 0.66) { const s = (t-0.33)/0.33; return `rgba(${Math.round(69+s*175)},${Math.round(123+s*36)},${Math.round(87-s*74)},0.9)`; }
-      const s = (t-0.66)/0.34;
-      return `rgba(${Math.round(244-s*14)},${Math.round(159-s*102)},${Math.round(3)},0.95)`;
+      if (!max || val <= 0) return 'rgba(15,15,22,0.7)';
+      const ratio = Math.min(Math.max(val / max, 0), 1);
+      if (ratio < 0.25) return 'rgba(29,53,87,0.9)'; // Low
+      if (ratio < 0.5) return '#457b9d'; // Med
+      if (ratio < 0.75) return '#f4a261'; // High
+      return '#e63946'; // Critical
     }
 
     // ── Mode toggle ──────────────────────────────────────────────────────────
@@ -2365,28 +2358,6 @@
         }
       });
 
-      // Donut — Safety Equipment
-      const saf = data.safety_equipment || [];
-      const safCtx = document.getElementById('p3SafetyCanvas').getContext('2d');
-      if (p3State.safetyChart) p3State.safetyChart.destroy();
-      p3State.safetyChart = new Chart(safCtx, {
-        type: 'doughnut',
-        data: {
-          labels: saf.map(r => r.safety_equipment),
-          datasets: [{ data: saf.map(r => +r.total), backgroundColor: ['#2d6a4f','#457b9d','#f4a261','#e63946','#a8dadc','#e9c46a','#264653','#6d6875'], borderWidth: 0 }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, cutout: '60%',
-          plugins: {
-            legend: { position: 'bottom', labels: { color: '#909090', font: { family: 'Inter', size: 9 }, padding: 6, boxWidth: 8 } },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              bodyFont: { family: 'JetBrains Mono', size: 10 },
-              callbacks: { label: item => ` ${item.raw.toLocaleString()} (${saf[item.dataIndex]?.pct}%)` }
-            }
-          }
-        }
-      });
     } catch (e) {
       console.error('P3 profile load failed:', e);
       const profileCard = document.getElementById('p3AgeCanvas')?.closest('.p3-card');
