@@ -87,8 +87,19 @@ foreach ($result as $row) {
     ];
 }
 
+$maxFatal = 0;
+try {
+    $maxResult = $client->run('MATCH ()-[r:CO_OCCURS_WITH]->() RETURN max(r.fatal_rate) AS maxFatal');
+    foreach ($maxResult as $row) {
+        $maxFatal = round((float)($row->get('maxFatal') ?? 0) * 100, 2);
+    }
+} catch (\Throwable $e) {
+    $maxFatal = 0;
+}
+
 echo json_encode([
     'nodes' => array_values($nodeMap),
     'links' => $links,
+    'max_fatal_rate' => $maxFatal,
 ]);
 ?>

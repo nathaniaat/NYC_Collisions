@@ -503,6 +503,7 @@
       font-size: 9px;
       font-weight: 500;
       text-transform: uppercase;
+      padding: 10px 12px;
       letter-spacing: 1px;
       color: var(--muted);
       margin-bottom: 5px
@@ -876,6 +877,97 @@
       color: var(--muted)
     }
 
+    .heat-legend-slider {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      min-width: 220px;
+      flex: 1 1 auto;
+    }
+
+    .heat-legend-slider .h-slider {
+      width: 100%;
+      min-height: 14px;
+      border-radius: 7px;
+      background: linear-gradient(90deg, #1d3557 0%, #457b9d 30%, #f4a261 65%, #e63946 100%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 0 2px rgba(0,0,0,0.2);
+    }
+
+    .heat-legend-slider .h-range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      width: 100%;
+    }
+
+    .heat-legend-slider .h-range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .p3-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .p3-legend-row span.p3-leg-label {
+      flex: 1 1 100%;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .p3-legend-row .p3-legend-slider {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      min-width: 240px;
+    }
+
+    .p3-legend-row .p3-leg-track {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #1d3557, #457b9d, #f4a261, #e63946);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .p3-legend-row .p3-leg-values {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .p3-legend-row .p3-leg-values span {
+      white-space: nowrap;
+    }
+
+    .boro-label {
+      color: rgba(255, 255, 255, 0.9) !important;
+      background: rgba(0, 0, 0, 0.45) !important;
+      border: 1px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 3px !important;
+      padding: 2px 6px !important;
+      font-size: 10px !important;
+      font-family: Inter, sans-serif !important;
+      text-transform: uppercase;
+      pointer-events: none !important;
+    }
+
     .bar-legend {
       padding: 10px 0 10px 16px;
       display: flex;
@@ -924,7 +1016,7 @@
       border-radius: 4px;
       display: block
     }
-  
+
     /* ── Panel 3 ─────────────────────────────────────────────────────────── */
     .panel3-wrapper {
       background: transparent;
@@ -935,6 +1027,7 @@
       gap: 18px;
       flex-shrink: 0;
     }
+
     .panel3-card-head {
       display: flex;
       align-items: center;
@@ -944,6 +1037,7 @@
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
+
     .panel3-controls {
       display: flex;
       align-items: center;
@@ -952,17 +1046,84 @@
       border-top: 1px solid var(--border);
       background: var(--bg);
     }
-    .p3-ctrl { display: flex; align-items: center; gap: 8px; }
-    .p3-ctrl label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
-    .p3-toggle { display: flex; background: var(--bg); border: 1px solid var(--border2); border-radius: 4px; overflow: hidden; }
-    .p3-btn { background: transparent; border: none; color: var(--muted); padding: 4px 12px; font-family: 'Inter', sans-serif; font-size: 11px; cursor: pointer; transition: background 0.1s, color 0.1s; }
-    .p3-btn.active { background: var(--red-bg); color: var(--red); }
-    .p3-stat { display: flex; flex-direction: column; }
-    .p3-stat-v { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--text); }
-    .p3-stat-l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
-    .panel3-row1 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .panel3-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .p3-card { background: var(--surface); border: 1px solid var(--border); border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; }
+
+    .p3-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .p3-ctrl label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+
+    .p3-toggle {
+      display: flex;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .p3-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 4px 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .p3-btn.active {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .p3-stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .p3-stat-v {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .p3-stat-l {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+
+    .panel3-row1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .panel3-row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .p3-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
     .p3-card-head {
       padding: 9px 13px;
       border-bottom: 1px solid var(--border);
@@ -972,6 +1133,7 @@
       gap: 12px;
       flex-shrink: 0;
     }
+
     .p3-card-head h3 {
       font-size: 10px;
       font-weight: 500;
@@ -980,11 +1142,13 @@
       color: var(--text);
       margin: 0;
     }
+
     .p3-card-head .cm {
       font-family: var(--mono);
       font-size: 9px;
       color: var(--muted);
     }
+<<<<<<< HEAD
     .p3-ch-title { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
     .p3-chart-body { flex: 1; min-height: 0; padding: 8px; position: relative; height: 280px; }
     .p3-chart-body canvas { width: 100% !important; height: 100% !important; }
@@ -1004,8 +1168,122 @@
     .p3-profile-third { display: flex; flex-direction: column; overflow: hidden; }
     .p3-profile-third canvas { width: 100% !important; height: 100% !important; }
     .p3-profile-third .p3-donut-wrap { flex: 1; }
+=======
+>>>>>>> ef53d672a91ff09e58c2ba8db667f4cb2f627f01
 
-</style>
+    .p3-ch-title {
+      font-size: 10px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+    }
+
+    .p3-chart-body {
+      flex: 1;
+      min-height: 0;
+      padding: 8px;
+      position: relative;
+      height: 280px;
+    }
+
+    .p3-chart-body canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .p3-legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 13px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .p3-leg-label {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .p3-leg-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+    }
+
+    .p3-leg-txt {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .p3-sub-title {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      padding: 6px 12px 4px;
+    }
+
+    .p3-driver-body {
+      display: grid;
+      grid-template-columns: 200px 1px 1fr;
+      height: 240px;
+    }
+
+    .p3-driver-half {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .p3-driver-bar {
+      padding: 4px 10px 8px;
+    }
+
+    .p3-driver-bar canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .p3-donut-wrap {
+      flex: 1;
+      padding: 6px 12px 10px;
+      position: relative;
+    }
+
+    .p3-donut-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .p3-divider {
+      width: 1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    .p3-profile-body {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr 1px 180px;
+      height: 240px;
+    }
+
+    .p3-profile-third {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .p3-profile-third canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .p3-profile-third .p3-donut-wrap {
+      flex: 1;
+    }
+  </style>
 </head>
 
 <body>
@@ -1033,24 +1311,27 @@
             echo "<option value='$y'" . ($y == 2025 ? " selected" : "") . ">$y</option>"; ?></select>
         </div>
       </div>
+<<<<<<< HEAD
       <div class="fg"><label for="colorMode">Heatmap Mode</label>
         <select id="colorMode">
           <option value="killed">By Fatalities</option>
           <option value="crash">By Total Crashes</option>
         </select>
       </div>
+=======
+>>>>>>> ef53d672a91ff09e58c2ba8db667f4cb2f627f01
       <div class="stats">
         <div class="stat">
           <div class="v" id="statTotalCrash">—</div>
           <div class="l">Total Crashes</div>
         </div>
         <div class="stat">
-          <div class="v r" id="statTotalKilled">—</div>
-          <div class="l">Total Killed</div>
-        </div>
-        <div class="stat">
           <div class="v" id="statPeakSlot">—</div>
           <div class="l">Peak Fatal Slot</div>
+        </div>
+        <div class="stat">
+          <div class="v r" id="statTotalKilled">—</div>
+          <div class="l">Total Killed</div>
         </div>
         <div class="stat">
           <div class="v" id="statVRUKilled">—</div>
@@ -1073,31 +1354,27 @@
             <div class="ch">
               <h2>Crash Heatmap — Hour × Day</h2>
             </div>
+            <div class="fg heatmap-mode-card" style="margin:0 0 12px;">
+              <label>Heatmap Mode</label>
+              <select id="colorMode">
+                <option value="killed">Number of Fatalities</option>
+                <option value="crash">Total Crashes</option>
+              </select>
+            </div>
             <div class="si" id="slotInfo">Click a time slot to focus on</div>
             <div class="cb"><canvas id="heatmapCanvas"></canvas></div>
             <div class="heat-legend" id="heatLegend">
               <div class="h-item">
-                <div class="h-label">Number of Fatalities</div>
+                <div class="h-label">Heatmap scale: Low / Mid / High</div>
               </div>
-              <div class="h-item">
-                <div class="h-swatch" style="background:rgba(15,15,22,0.9)"></div>
-                <div class="h-label">None</div>
-              </div>
-              <div class="h-item">
-                <div class="h-swatch" style="background:#1d3557"></div>
-                <div class="h-label">Low</div>
-              </div>
-              <div class="h-item">
-                <div class="h-swatch" style="background:#457b9d"></div>
-                <div class="h-label">Med</div>
-              </div>
-              <div class="h-item">
-                <div class="h-swatch" style="background:#f4a261"></div>
-                <div class="h-label">High</div>
-              </div>
-              <div class="h-item">
-                <div class="h-swatch" style="background:#e63946"></div>
-                <div class="h-label">Critical</div>
+              <div class="h-item heat-legend-slider">
+                <div class="h-slider"></div>
+                <div class="h-range-labels"><span>Low</span><span>High</span></div>
+                <div class="h-range-labels" style="margin-top:4px;justify-content:space-between;">
+                  <span id="heatLegendLow">Low</span>
+                  <span id="heatLegendMid">Mid</span>
+                  <span id="heatLegendHigh">High</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1196,10 +1473,13 @@
                 <div class="gl-node"></div><span>Factor node (size = frequency)</span>
               </div>
               <div class="gl-item">
-                <div class="gl-line" style="background:#b5d4f4"></div><span>Low fatal rate</span>
+                <div class="gl-line" style="background:#457b9d"></div><span>Low fatal rate &lt; 0.5%</span>
               </div>
               <div class="gl-item">
-                <div class="gl-line" style="background:#a32d2d"></div><span>High fatal rate</span>
+                <div class="gl-line" style="background:#f4a261"></div><span>Mid fatal rate 0.5–1.49%</span>
+              </div>
+              <div class="gl-item">
+                <div class="gl-line" style="background:#e63946"></div><span>High fatal rate ≥ 1.5%</span>
               </div>
             </div>
           </div>
@@ -1245,18 +1525,23 @@
               <div class="p3-ctrl">
                 <label for="p3BtnKilled">Mode</label>
                 <div class="p3-toggle">
-                  <button class="p3-btn active" id="p3BtnKilled" type="button" onclick="p3SetMode('killed')">Killed</button>
+                  <button class="p3-btn active" id="p3BtnKilled" type="button"
+                    onclick="p3SetMode('killed')">Killed</button>
                   <button class="p3-btn" id="p3BtnInjured" type="button" onclick="p3SetMode('injured')">Injured</button>
                 </div>
               </div>
             </div>
             <div class="p3-chart-body" id="p3HeatmapBody"></div>
-            <div class="p3-legend-row">
-              <span class="p3-leg-label">VRU Concentration:</span>
-              <div class="p3-leg-swatch" style="background:rgba(29,53,87,0.9)"></div><span class="p3-leg-txt">Low</span>
-              <div class="p3-leg-swatch" style="background:#457b9d"></div><span class="p3-leg-txt">Med</span>
-              <div class="p3-leg-swatch" style="background:#f4a261"></div><span class="p3-leg-txt">High</span>
-              <div class="p3-leg-swatch" style="background:#e63946"></div><span class="p3-leg-txt">Critical</span>
+            <div class="p3-legend-row" id="p3HeatmapLegend">
+              <span class="p3-leg-label">VRU Heatmap Legend</span>
+              <div class="p3-legend-slider">
+                <div class="p3-leg-track"></div>
+                <div class="p3-leg-values">
+                  <span id="p3HeatmapLegendLow">Low</span>
+                  <span id="p3HeatmapLegendMid">Mid</span>
+                  <span id="p3HeatmapLegendHigh">High</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="p3-card">
@@ -1265,7 +1550,8 @@
             </div>
             <div class="p3-chart-body"><canvas id="p3BubbleCanvas"></canvas></div>
             <div class="p3-legend-row">
-              <span class="p3-leg-label">Bubble size = absolute VRU killed &nbsp;|&nbsp; Y-axis = kill rate per 1,000 crashes</span>
+              <span class="p3-leg-label">Bubble size = absolute VRU killed &nbsp;|&nbsp; Y-axis = kill rate per 1,000
+                crashes</span>
             </div>
           </div>
         </div>
@@ -1389,6 +1675,7 @@
             x: {
               type: 'linear', min: -0.5, max: 6.5, position: 'top',
               grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
+              title: { display: true, text: 'Day of week', color: '#909090', font: { family: 'Inter', size: 10, weight: '600' } },
               ticks: {
                 stepSize: 1, callback: v => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][v] ?? '',
                 color: '#55556a', font: { family: 'Inter', size: 10, weight: '500' }
@@ -1397,6 +1684,7 @@
             y: {
               type: 'linear', min: -0.5, max: 23.5, reverse: true,
               grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
+              title: { display: true, text: 'Hour of day', color: '#909090', font: { family: 'Inter', size: 10, weight: '600' } },
               ticks: {
                 stepSize: 1, callback: v => Number.isInteger(v) ? String(v).padStart(2, '0') + ':00' : '',
                 color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 }
@@ -1413,6 +1701,21 @@
           }
         }
       });
+
+      const heatLegend = document.getElementById('heatLegend');
+      if (heatLegend) {
+        const t1 = maxV === 0 ? 0 : Math.max(1, Math.floor(maxV / 3));
+        const t2 = maxV === 0 ? 0 : Math.max(t1, Math.floor((maxV * 2) / 3));
+        const lowText = maxV === 0 ? 'Low: 0' : `Low: 0–${t1}`;
+        const midText = maxV === 0 ? 'Mid: 0' : `Mid: ${t1 + 1}–${t2}`;
+        const highText = maxV === 0 ? 'High: 0' : `High: ${t2 + 1}–${maxV}`;
+        const lowSpan = heatLegend.querySelector('#heatLegendLow');
+        const midSpan = heatLegend.querySelector('#heatLegendMid');
+        const highSpan = heatLegend.querySelector('#heatLegendHigh');
+        if (lowSpan) lowSpan.textContent = lowText;
+        if (midSpan) midSpan.textContent = midText;
+        if (highSpan) highSpan.textContent = highText;
+      }
     }
 
     // ── CHOROPLETH ──
@@ -1445,6 +1748,15 @@
           layer.on('click', () => { state.borough = nm; document.getElementById('filterBorough').value = nm; refreshAll() });
           layer.on('mouseover', () => layer.setStyle({ fillOpacity: 0.9, weight: 2, color: 'rgba(255,255,255,0.5)' }));
           layer.on('mouseout', () => geojsonLayer.resetStyle(layer));
+          try {
+            const labelPos = layer.getBounds().getCenter();
+            L.marker(labelPos, {
+              interactive: false,
+              icon: L.divIcon({ className: 'boro-label', html: raw, iconSize: [100, 20] })
+            }).addTo(map);
+          } catch (err) {
+            // ignore if centroid cannot be calculated
+          }
         }
       }).addTo(map);
       map.fitBounds(geojsonLayer.getBounds(), { padding: [8, 8] });
@@ -1495,8 +1807,16 @@
             }
           },
           scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } },
-            y: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 11 } } }
+            x: {
+              grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+              title: { display: true, text: 'Crash count', color: '#909090', font: { family: 'Inter', size: 10, weight: '600' } },
+              ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } }
+            },
+            y: {
+              grid: { display: false },
+              title: { display: true, text: 'Factor', color: '#909090', font: { family: 'Inter', size: 10, weight: '600' } },
+              ticks: { color: '#909090', font: { family: 'Inter', size: 11 } }
+            }
           },
           onClick(event, elements) {
             if (elements.length) {
@@ -1594,10 +1914,12 @@
       simulation: null,
     };
 
-    // ── Color scale for edges (fatal_rate 0–20%) ────────────────────────────
-    const edgeColorScale = d3.scaleSequential()
-      .domain([0, 15])
-      .interpolator(d3.interpolateRgb('#2d5a8e', '#a32d2d'));
+    // ── Edge color thresholds for fatal_rate ─────────────────────────────
+    function edgeFatalColor(rate) {
+      if (rate >= 1.5) return '#e63946';
+      if (rate >= 0.5) return '#f4a261';
+      return '#457b9d';
+    }
 
     // ── Fetch graph data from Neo4j via PHP ────────────────────────────────
     async function p2LoadGraph() {
@@ -1611,6 +1933,18 @@
           return;
         }
         p2State.graphData = data;
+        const maxFatalRate = Number(data.max_fatal_rate || 0);
+        const fatalSlider = document.getElementById('p2SliderFatal');
+        if (fatalSlider && !Number.isNaN(maxFatalRate) && maxFatalRate > 0) {
+          const maxValue = Math.max(0.5, Math.round(maxFatalRate * 10) / 10);
+          fatalSlider.max = maxValue;
+          fatalSlider.step = maxValue <= 1 ? 0.1 : 0.5;
+          if (p2State.minFatal > maxValue) {
+            p2State.minFatal = maxValue;
+            fatalSlider.value = maxValue;
+          }
+          document.getElementById('p2ValFatal').textContent = p2State.minFatal + '%';
+        }
         document.getElementById('graphLoading').style.display = 'none';
         p2RenderGraph(data);
         p2RenderTable(data.links);
@@ -1667,7 +2001,7 @@
         .data(links)
         .join('line')
         .attr('class', 'edge-line')
-        .attr('stroke', d => edgeColorScale(d.fatal_rate))
+        .attr('stroke', d => edgeFatalColor(d.fatal_rate))
         .attr('stroke-width', d => edgeWidth(d.crash_count))
         .attr('stroke-opacity', 0.65)
         .attr('data-src', d => d.source_name)
@@ -1888,9 +2222,8 @@
 
       // Rate class
       function rateClass(r) {
-        if (r >= 8) return 'critical';
-        if (r >= 5) return 'high';
-        if (r >= 3) return 'mid';
+        if (r >= 1.5) return 'high';
+        if (r >= 0.5) return 'mid';
         return 'low';
       }
 
@@ -2005,12 +2338,21 @@
     };
 
     function p3HeatColor(val, max) {
+<<<<<<< HEAD
       if (!max || val <= 0) return 'rgba(15,15,22,0.7)';
       const ratio = Math.min(Math.max(val / max, 0), 1);
       if (ratio < 0.25) return 'rgba(29,53,87,0.9)'; // Low
       if (ratio < 0.5) return '#457b9d'; // Med
       if (ratio < 0.75) return '#f4a261'; // High
       return '#e63946'; // Critical
+=======
+      if (!max || val === 0) return 'rgba(15,15,22,0.7)';
+      const t = Math.pow(Math.min(val / max, 1), 0.4);
+      if (t < 0.33) { const s = t / 0.33; return `rgba(${Math.round(s * 69)},${Math.round(s * 123)},${Math.round(22 + s * 65)},0.85)`; }
+      if (t < 0.66) { const s = (t - 0.33) / 0.33; return `rgba(${Math.round(69 + s * 175)},${Math.round(123 + s * 36)},${Math.round(87 - s * 74)},0.9)`; }
+      const s = (t - 0.66) / 0.34;
+      return `rgba(${Math.round(244 - s * 14)},${Math.round(159 - s * 102)},${Math.round(3)},0.95)`;
+>>>>>>> ef53d672a91ff09e58c2ba8db667f4cb2f627f01
     }
 
     // ── Mode toggle ──────────────────────────────────────────────────────────
@@ -2029,7 +2371,7 @@
         try {
           const json = JSON.parse(text);
           if (json.error) err += ` - ${json.error}`;
-        } catch (_) {}
+        } catch (_) { }
         throw new Error(err);
       }
       try {
@@ -2049,11 +2391,11 @@
         let totKilled = 0, totInjured = 0;
         const boroughKill = {};
         data.forEach(r => {
-          totKilled  += +r.total_vru_killed;
+          totKilled += +r.total_vru_killed;
           totInjured += +r.total_vru_injured;
           boroughKill[r.borough] = (boroughKill[r.borough] || 0) + +r.total_vru_killed;
         });
-        const hotBorough = Object.entries(boroughKill).sort((a,b)=>b[1]-a[1])[0]?.[0] || '—';
+        const hotBorough = Object.entries(boroughKill).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
         const p3TotalVRUKilledEl = document.getElementById('p3TotalVRUKilled');
         const p3TotalVRUInjEl = document.getElementById('p3TotalVRUInj');
         const p3HotBoroughEl = document.getElementById('p3HotBorough');
@@ -2062,11 +2404,11 @@
         const statHotBoroughEl = document.getElementById('statHotBorough');
 
         if (p3TotalVRUKilledEl) p3TotalVRUKilledEl.textContent = totKilled.toLocaleString();
-        if (p3TotalVRUInjEl) p3TotalVRUInjEl.textContent    = totInjured.toLocaleString();
-        if (p3HotBoroughEl) p3HotBoroughEl.textContent     = hotBorough;
-        if (statVRUKilledEl) statVRUKilledEl.textContent    = totKilled.toLocaleString();
-        if (statVRUInjuredEl) statVRUInjuredEl.textContent   = totInjured.toLocaleString();
-        if (statHotBoroughEl) statHotBoroughEl.textContent   = hotBorough;
+        if (p3TotalVRUInjEl) p3TotalVRUInjEl.textContent = totInjured.toLocaleString();
+        if (p3HotBoroughEl) p3HotBoroughEl.textContent = hotBorough;
+        if (statVRUKilledEl) statVRUKilledEl.textContent = totKilled.toLocaleString();
+        if (statVRUInjuredEl) statVRUInjuredEl.textContent = totInjured.toLocaleString();
+        if (statHotBoroughEl) statHotBoroughEl.textContent = hotBorough;
 
         p3RenderHeatmap(data);
       } catch (e) {
@@ -2077,7 +2419,7 @@
     }
 
     function p3RenderHeatmap(data) {
-      const BOROUGHS = ['BROOKLYN','QUEENS','MANHATTAN','BRONX','STATEN ISLAND'];
+      const BOROUGHS = ['BROOKLYN', 'QUEENS', 'MANHATTAN', 'BRONX', 'STATEN ISLAND'];
       const useKilled = p3State.mode === 'killed';
       const field = useKilled ? 'total_vru_killed' : 'total_vru_injured';
 
@@ -2101,6 +2443,24 @@
         .attr('viewBox', `0 0 ${W} ${H}`)
         .style('display', 'block');
 
+      // Axis titles
+      svg.append('text')
+        .attr('x', PAD_L + 24 * CELL_W / 2)
+        .attr('y', PAD_T - 18)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 11).attr('fill', '#909090')
+        .attr('font-family', 'Inter, sans-serif').attr('font-weight', 600)
+        .text('Hour of day');
+
+      svg.append('text')
+        .attr('x', PAD_L - 52)
+        .attr('y', PAD_T + (BOROUGHS.length * CELL_H) / 2)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 11).attr('fill', '#909090')
+        .attr('font-family', 'Inter, sans-serif').attr('font-weight', 600)
+        .attr('transform', `rotate(-90, ${PAD_L - 52}, ${PAD_T + (BOROUGHS.length * CELL_H) / 2})`)
+        .text('Borough');
+
       // Hour labels (top)
       for (let h = 0; h < 24; h++) {
         svg.append('text')
@@ -2109,7 +2469,7 @@
           .attr('text-anchor', 'middle')
           .attr('font-size', 9).attr('fill', '#55556a')
           .attr('font-family', 'JetBrains Mono, monospace')
-          .text(h % 3 === 0 ? String(h).padStart(2,'0') : '');
+          .text(h % 3 === 0 ? String(h).padStart(2, '0') : '');
       }
 
       // Borough rows
@@ -2124,35 +2484,49 @@
           .text(b.charAt(0) + b.slice(1).toLowerCase());
 
         for (let h = 0; h < 24; h++) {
-          const row  = matrix[b][h] || {};
-          const val  = +(row[field] || 0);
-          const x    = PAD_L + h * CELL_W;
+          const row = matrix[b][h] || {};
+          const val = +(row[field] || 0);
+          const x = PAD_L + h * CELL_W;
           const fill = p3HeatColor(val, maxVal);
 
           const cell = svg.append('rect')
-            .attr('x', x+1).attr('y', y+1)
-            .attr('width', CELL_W-2).attr('height', CELL_H-2)
+            .attr('x', x + 1).attr('y', y + 1)
+            .attr('width', CELL_W - 2).attr('height', CELL_H - 2)
             .attr('rx', 2).attr('fill', fill)
+            .attr('stroke', 'rgba(255,255,255,0.18)').attr('stroke-width', 1)
             .style('cursor', 'pointer');
 
           // Tooltip on hover
-          cell.on('mouseover', function(event) {
+          cell.on('mouseover', function (event) {
             const tip = d3.select('body').append('div').attr('class', 'p3-tip')
-              .style('position','fixed').style('pointer-events','none')
-              .style('background','#17171e').style('border','1px solid rgba(255,255,255,0.1)')
-              .style('border-radius','4px').style('padding','7px 10px')
-              .style('font-family','JetBrains Mono,monospace').style('font-size','11px')
-              .style('color','#ededf2').style('z-index','9999')
-              .style('box-shadow','0 4px 16px rgba(0,0,0,0.6)');
-            tip.html(`<b style="color:#f4a261">${b} · ${String(h).padStart(2,'0')}:00</b><br>
+              .style('position', 'fixed').style('pointer-events', 'none')
+              .style('background', '#17171e').style('border', '1px solid rgba(255,255,255,0.1)')
+              .style('border-radius', '4px').style('padding', '7px 10px')
+              .style('font-family', 'JetBrains Mono,monospace').style('font-size', '11px')
+              .style('color', '#ededf2').style('z-index', '9999')
+              .style('box-shadow', '0 4px 16px rgba(0,0,0,0.6)');
+            tip.html(`<b style="color:#f4a261">${b} · ${String(h).padStart(2, '0')}:00</b><br>
               ${useKilled ? 'VRU killed' : 'VRU injured'}: <b>${val}</b><br>
-              Total crashes: ${row.total_crashes||0}`);
-            tip.style('left',(event.clientX+14)+'px').style('top',(event.clientY-10)+'px');
-          }).on('mousemove', function(event) {
-            d3.select('.p3-tip').style('left',(event.clientX+14)+'px').style('top',(event.clientY-10)+'px');
+              Total crashes: ${row.total_crashes || 0}`);
+            tip.style('left', (event.clientX + 14) + 'px').style('top', (event.clientY - 10) + 'px');
+          }).on('mousemove', function (event) {
+            d3.select('.p3-tip').style('left', (event.clientX + 14) + 'px').style('top', (event.clientY - 10) + 'px');
           }).on('mouseout', () => d3.selectAll('.p3-tip').remove());
         }
       });
+
+      const legendEl = document.getElementById('p3HeatmapLegend');
+      if (legendEl) {
+        const safeMax = Math.max(0, Math.round(maxVal));
+        const t1 = Math.floor(safeMax * 0.33);
+        const t2 = Math.floor(safeMax * 0.66);
+        const lowLabel = safeMax === 0 ? '0' : `Low: 0–${t1}`;
+        const midLabel = safeMax <= 1 ? `Mid: ${safeMax}` : `Mid: ${Math.min(t1 + 1, safeMax)}–${Math.max(t2, t1 + 1)}`;
+        const highLabel = safeMax <= 1 ? `High: ${safeMax}` : `High: ${Math.min(t2 + 1, safeMax)}–${safeMax}`;
+        legendEl.querySelector('#p3HeatmapLegendLow').textContent = `${useKilled ? 'Killed' : 'Injured'} — ${lowLabel}`;
+        legendEl.querySelector('#p3HeatmapLegendMid').textContent = `${useKilled ? 'Killed' : 'Injured'} — ${midLabel}`;
+        legendEl.querySelector('#p3HeatmapLegendHigh').textContent = `${useKilled ? 'Killed' : 'Injured'} — ${highLabel}`;
+      }
     }
 
     // ── Bubble Chart (PostgreSQL) ─────────────────────────────────────────────
@@ -2162,81 +2536,83 @@
 
         const maxBubble = Math.max(...data.map(r => +r.vru_killed || 0));
 
-      const datasets = data.map(r => ({
-        label: r.vehicle_type,
-        data: [{
-          x: +r.crash_involving,
-          y: +r.vru_kill_rate_per_1000,
-          r: Math.max(4, Math.sqrt((+r.vru_killed || 0) / (maxBubble || 1)) * 28),
-        }],
-        backgroundColor: `rgba(230,57,70,${0.2 + (+r.vru_kill_rate_per_1000 / 10) * 0.6})`,
-        borderColor: '#e63946',
-        borderWidth: 1,
-      }));
+        const datasets = data.map(r => ({
+          label: r.vehicle_type,
+          data: [{
+            x: +r.crash_involving,
+            y: +r.vru_kill_rate_per_1000,
+            r: Math.max(4, Math.sqrt((+r.vru_killed || 0) / (maxBubble || 1)) * 28),
+          }],
+          backgroundColor: `rgba(230,57,70,${0.2 + (+r.vru_kill_rate_per_1000 / 10) * 0.6})`,
+          borderColor: '#e63946',
+          borderWidth: 1,
+        }));
 
-      const ctx = document.getElementById('p3BubbleCanvas').getContext('2d');
-      if (p3State.bubbleChart) p3State.bubbleChart.destroy();
+        const ctx = document.getElementById('p3BubbleCanvas').getContext('2d');
+        if (p3State.bubbleChart) p3State.bubbleChart.destroy();
 
-      p3State.bubbleChart = new Chart(ctx, {
-        type: 'bubble',
-        data: { datasets },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              titleColor: '#f4a261', bodyColor: '#909090',
-              titleFont: { family: 'JetBrains Mono', size: 11 },
-              bodyFont:  { family: 'JetBrains Mono', size: 10 },
-              callbacks: {
-                title: items => items[0].dataset.label,
-                label: item => [
-                  `crashes: ${item.raw.x.toLocaleString()}`,
-                  `kill rate: ${item.raw.y.toFixed(2)}/1,000`,
-                  `VRU killed: ${data.find(r=>r.vehicle_type===item.dataset.label)?.vru_killed||0}`,
-                ]
+        p3State.bubbleChart = new Chart(ctx, {
+          type: 'bubble',
+          data: { datasets },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                titleColor: '#f4a261', bodyColor: '#909090',
+                titleFont: { family: 'JetBrains Mono', size: 11 },
+                bodyFont: { family: 'JetBrains Mono', size: 10 },
+                callbacks: {
+                  title: items => items[0].dataset.label,
+                  label: item => [
+                    `crashes: ${item.raw.x.toLocaleString()}`,
+                    `kill rate: ${item.raw.y.toFixed(2)}/1,000`,
+                    `VRU killed: ${data.find(r => r.vehicle_type === item.dataset.label)?.vru_killed || 0}`,
+                  ]
+                }
               }
-            }
-          },
-          scales: {
-            x: {
-              title: { display: true, text: 'Total Crashes Involving Vehicle Type', color: '#55556a', font: { family: 'Inter', size: 10 } },
-              grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } }
             },
-            y: {
-              title: { display: true, text: 'VRU Kill Rate per 1,000 Crashes', color: '#55556a', font: { family: 'Inter', size: 10 } },
-              grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } }
-            }
-          },
-          // Draw vehicle type labels on bubbles
-          animation: { onComplete: function() {
-            const chart = this;
-            const ctx2  = chart.ctx;
-            chart.data.datasets.forEach((ds, di) => {
-              const meta = chart.getDatasetMeta(di);
-              if (!meta.hidden) {
-                const el = meta.data[0];
-                if (!el) return;
-                ctx2.save();
-                ctx2.fillStyle = '#ededf2';
-                ctx2.font = '9px Inter';
-                ctx2.textAlign = 'center';
-                ctx2.textBaseline = 'middle';
-                const lbl = ds.label.length > 12 ? ds.label.slice(0,10)+'…' : ds.label;
-                ctx2.fillText(lbl, el.x, el.y);
-                ctx2.restore();
+            scales: {
+              x: {
+                title: { display: true, text: 'Total Crashes Involving Vehicle Type', color: '#55556a', font: { family: 'Inter', size: 10 } },
+                grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } }
+              },
+              y: {
+                title: { display: true, text: 'VRU Kill Rate per 1,000 Crashes', color: '#55556a', font: { family: 'Inter', size: 10 } },
+                grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } }
               }
-            });
-          }}
-        }
-      });
-    } catch (e) {
-      console.error('P3 bubble load failed:', e);
-      const bubbleBody = document.getElementById('p3BubbleCanvas')?.closest('.p3-chart-body');
-      if (bubbleBody) bubbleBody.textContent = 'Failed to load VRU bubble: ' + e.message;
+            },
+            // Draw vehicle type labels on bubbles
+            animation: {
+              onComplete: function () {
+                const chart = this;
+                const ctx2 = chart.ctx;
+                chart.data.datasets.forEach((ds, di) => {
+                  const meta = chart.getDatasetMeta(di);
+                  if (!meta.hidden) {
+                    const el = meta.data[0];
+                    if (!el) return;
+                    ctx2.save();
+                    ctx2.fillStyle = '#ededf2';
+                    ctx2.font = '9px Inter';
+                    ctx2.textAlign = 'center';
+                    ctx2.textBaseline = 'middle';
+                    const lbl = ds.label.length > 12 ? ds.label.slice(0, 10) + '…' : ds.label;
+                    ctx2.fillText(lbl, el.x, el.y);
+                    ctx2.restore();
+                  }
+                });
+              }
+            }
+          }
+        });
+      } catch (e) {
+        console.error('P3 bubble load failed:', e);
+        const bubbleBody = document.getElementById('p3BubbleCanvas')?.closest('.p3-chart-body');
+        if (bubbleBody) bubbleBody.textContent = 'Failed to load VRU bubble: ' + e.message;
+      }
     }
-}
 
     // ── Driver Behavior (PostgreSQL) ──────────────────────────────────────────
     async function p3LoadDriver() {
@@ -2245,59 +2621,59 @@
 
         // Donut — License Status
         const lic = data.license_status || [];
-      const licCtx = document.getElementById('p3LicenseCanvas').getContext('2d');
-      if (p3State.licenseChart) p3State.licenseChart.destroy();
-      p3State.licenseChart = new Chart(licCtx, {
-        type: 'doughnut',
-        data: {
-          labels: lic.map(r => r.driver_license_status),
-          datasets: [{ data: lic.map(r => +r.total), backgroundColor: ['#457b9d','#e63946','#f4a261','#2d6a4f'], borderWidth: 0 }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false, cutout: '65%',
-          plugins: {
-            legend: { position: 'bottom', labels: { color: '#909090', font: { family: 'Inter', size: 10 }, padding: 8, boxWidth: 10 } },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              bodyFont: { family: 'JetBrains Mono', size: 10 }, titleFont: { family: 'JetBrains Mono', size: 11 },
-              callbacks: { label: item => ` ${item.label}: ${item.raw.toLocaleString()} (${lic[item.dataIndex]?.pct}%)` }
-            }
-          }
-        }
-      });
-
-      // Horizontal bar — Pre-collision Action
-      const pre = data.pre_collision || [];
-      const preCtx = document.getElementById('p3PreCollisionCanvas').getContext('2d');
-      if (p3State.preColChart) p3State.preColChart.destroy();
-      p3State.preColChart = new Chart(preCtx, {
-        type: 'bar',
-        data: {
-          labels: pre.map(r => r.pre_collision),
-          datasets: [{ data: pre.map(r => +r.total), backgroundColor: '#457b9d', borderRadius: 2, borderSkipped: false }]
-        },
-        options: {
-          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              bodyFont: { family: 'JetBrains Mono', size: 10 },
-              callbacks: { label: item => ` ${item.raw.toLocaleString()} crashes (${pre[item.dataIndex]?.pct}%)` }
-            }
+        const licCtx = document.getElementById('p3LicenseCanvas').getContext('2d');
+        if (p3State.licenseChart) p3State.licenseChart.destroy();
+        p3State.licenseChart = new Chart(licCtx, {
+          type: 'doughnut',
+          data: {
+            labels: lic.map(r => r.driver_license_status),
+            datasets: [{ data: lic.map(r => +r.total), backgroundColor: ['#457b9d', '#e63946', '#f4a261', '#2d6a4f'], borderWidth: 0 }]
           },
-          scales: {
-            x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } },
-            y: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 10 } } }
+          options: {
+            responsive: true, maintainAspectRatio: false, cutout: '65%',
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#909090', font: { family: 'Inter', size: 10 }, padding: 8, boxWidth: 10 } },
+              tooltip: {
+                backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                bodyFont: { family: 'JetBrains Mono', size: 10 }, titleFont: { family: 'JetBrains Mono', size: 11 },
+                callbacks: { label: item => ` ${item.label}: ${item.raw.toLocaleString()} (${lic[item.dataIndex]?.pct}%)` }
+              }
+            }
           }
-        }
-      });
-    } catch (e) {
-      console.error('P3 driver load failed:', e);
-      const driverCard = document.getElementById('p3LicenseCanvas')?.closest('.p3-card');
-      if (driverCard) driverCard.querySelector('.p3-driver-body').textContent = 'Failed to load VRU driver behavior: ' + e.message;
+        });
+
+        // Horizontal bar — Pre-collision Action
+        const pre = data.pre_collision || [];
+        const preCtx = document.getElementById('p3PreCollisionCanvas').getContext('2d');
+        if (p3State.preColChart) p3State.preColChart.destroy();
+        p3State.preColChart = new Chart(preCtx, {
+          type: 'bar',
+          data: {
+            labels: pre.map(r => r.pre_collision),
+            datasets: [{ data: pre.map(r => +r.total), backgroundColor: '#457b9d', borderRadius: 2, borderSkipped: false }]
+          },
+          options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                bodyFont: { family: 'JetBrains Mono', size: 10 },
+                callbacks: { label: item => ` ${item.raw.toLocaleString()} crashes (${pre[item.dataIndex]?.pct}%)` }
+              }
+            },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } },
+              y: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 10 } } }
+            }
+          }
+        });
+      } catch (e) {
+        console.error('P3 driver load failed:', e);
+        const driverCard = document.getElementById('p3LicenseCanvas')?.closest('.p3-card');
+        if (driverCard) driverCard.querySelector('.p3-driver-body').textContent = 'Failed to load VRU driver behavior: ' + e.message;
+      }
     }
-}
 
     // ── VRU Victim Profile (PostgreSQL) ──────────────────────────────────────
     async function p3LoadProfile() {
@@ -2306,51 +2682,42 @@
 
         // Bar — Age Group
         const age = data.age_group || [];
-      const ageCtx = document.getElementById('p3AgeCanvas').getContext('2d');
-      if (p3State.ageChart) p3State.ageChart.destroy();
-      p3State.ageChart = new Chart(ageCtx, {
-        type: 'bar',
-        data: {
-          labels: age.map(r => r.age_group),
-          datasets: [{ data: age.map(r => +r.total), backgroundColor: '#f4a261', borderRadius: 2, borderSkipped: false }]
-        },
-        options: {
-          responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              bodyFont: { family: 'JetBrains Mono', size: 10 },
-              callbacks: { label: item => ` ${item.raw.toLocaleString()} (${age[item.dataIndex]?.pct}%)` }
-            }
+        const ageCtx = document.getElementById('p3AgeCanvas').getContext('2d');
+        if (p3State.ageChart) p3State.ageChart.destroy();
+        p3State.ageChart = new Chart(ageCtx, {
+          type: 'bar',
+          data: {
+            labels: age.map(r => r.age_group),
+            datasets: [{ data: age.map(r => +r.total), backgroundColor: '#f4a261', borderRadius: 2, borderSkipped: false }]
           },
-          scales: {
-            x: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 9 } } },
-            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } }
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                bodyFont: { family: 'JetBrains Mono', size: 10 },
+                callbacks: { label: item => ` ${item.raw.toLocaleString()} (${age[item.dataIndex]?.pct}%)` }
+              }
+            },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 9 } } },
+              y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } }
+            }
           }
-        }
-      });
+        });
 
-      // Horizontal bar — Bodily Injury
-      const inj = data.bodily_injury || [];
-      const injCtx = document.getElementById('p3InjuryCanvas').getContext('2d');
-      if (p3State.injuryChart) p3State.injuryChart.destroy();
-      p3State.injuryChart = new Chart(injCtx, {
-        type: 'bar',
-        data: {
-          labels: inj.map(r => r.bodily_injury),
-          datasets: [{ data: inj.map(r => +r.total), backgroundColor: '#e63946', borderRadius: 2, borderSkipped: false }]
-        },
-        options: {
-          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
-              bodyFont: { family: 'JetBrains Mono', size: 10 },
-              callbacks: { label: item => ` ${item.raw.toLocaleString()} (${inj[item.dataIndex]?.pct}%)` }
-            }
+        // Horizontal bar — Bodily Injury
+        const inj = data.bodily_injury || [];
+        const injCtx = document.getElementById('p3InjuryCanvas').getContext('2d');
+        if (p3State.injuryChart) p3State.injuryChart.destroy();
+        p3State.injuryChart = new Chart(injCtx, {
+          type: 'bar',
+          data: {
+            labels: inj.map(r => r.bodily_injury),
+            datasets: [{ data: inj.map(r => +r.total), backgroundColor: '#e63946', borderRadius: 2, borderSkipped: false }]
           },
+<<<<<<< HEAD
           scales: {
             x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } },
             y: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 10 } } }
@@ -2362,8 +2729,31 @@
       console.error('P3 profile load failed:', e);
       const profileCard = document.getElementById('p3AgeCanvas')?.closest('.p3-card');
       if (profileCard) profileCard.querySelector('.p3-profile-body').textContent = 'Failed to load VRU profile: ' + e.message;
+=======
+          options: {
+            indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#17171e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+                bodyFont: { family: 'JetBrains Mono', size: 10 },
+                callbacks: { label: item => ` ${item.raw.toLocaleString()} (${inj[item.dataIndex]?.pct}%)` }
+              }
+            },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#3a3a50', font: { family: 'JetBrains Mono', size: 9 } } },
+              y: { grid: { display: false }, ticks: { color: '#909090', font: { family: 'Inter', size: 10 } } }
+            }
+          }
+        });
+
+      } catch (e) {
+        console.error('P3 profile load failed:', e);
+        const profileCard = document.getElementById('p3AgeCanvas')?.closest('.p3-card');
+        if (profileCard) profileCard.querySelector('.p3-profile-body').textContent = 'Failed to load VRU profile: ' + e.message;
+      }
+>>>>>>> ef53d672a91ff09e58c2ba8db667f4cb2f627f01
     }
-  }
 
     // ── Init Panel 3 ─────────────────────────────────────────────────────────
     p3LoadHeatmap();
@@ -2375,6 +2765,7 @@
   </script>
 
 
-</div>
+  </div>
 </body>
+
 </html>

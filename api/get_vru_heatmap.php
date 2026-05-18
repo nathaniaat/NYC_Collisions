@@ -5,13 +5,13 @@ header('Access-Control-Allow-Origin: *');
 require_once __DIR__ . '/vendor/autoload.php';
 
 try {
-    $client = new MongoDB\Client("mongodb://nath:150206@localhost:27017/");
+    $client = new MongoDB\Client("mongodb://mongodb:mongodb@localhost:27017/");
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['error' => 'MongoDB client initialization failed: ' . $e->getMessage()]);
     exit;
 }
-$col = $client->nyc_collisions->crash_events;
+$col = $client->collision->crash_events;
 
 $borough   = $_GET['borough'] ?? 'ALL';
 $yearStart = isset($_GET['year_start']) ? intval($_GET['year_start']) : 2020;
